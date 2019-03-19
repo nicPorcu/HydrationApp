@@ -17,6 +17,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+
 public class HydrationApp extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
     private SharedPreferences sharedPref;
@@ -103,10 +104,13 @@ public class HydrationApp extends AppCompatActivity
             currentFragment=new leaderboardFragment();
 
         } else if (id == R.id.nav_myInfo) {
+            currentFragment=new UserInfoFragment();
 
         } else if (id == R.id.nav_customization) {
+            currentFragment=new CustomizationFragment();
 
         } else if (id == R.id.nav_settings) {
+            currentFragment=new SettingsFragment();
 
         }
         if(currentFragment != null){
