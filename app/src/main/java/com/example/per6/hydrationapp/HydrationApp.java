@@ -1,6 +1,7 @@
 package com.example.per6.hydrationapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -16,6 +17,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import com.backendless.Backendless;
+import com.backendless.BackendlessUser;
+import com.backendless.async.callback.AsyncCallback;
+import com.backendless.exceptions.BackendlessFault;
 
 
 public class HydrationApp extends AppCompatActivity
@@ -37,6 +44,7 @@ public class HydrationApp extends AppCompatActivity
 
 
 
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -54,9 +62,65 @@ public class HydrationApp extends AppCompatActivity
         fm.beginTransaction()
                 .replace(R.id.fragment_container, currentFragment)
                 .commit();
+        logIn();
 
 
 
+
+
+    }
+
+
+    private void logIn() {
+
+        sharedPref = getSharedPreferences(
+                getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+        int userExists = sharedPref.getInt(getString(R.string.user), 0);
+
+        //checks if previous user exists
+        if (userExists == 0) {
+            Intent i = new Intent(this, LoginActivity.class);
+            startActivity(i);
+        }
+        if (userExists == 1) {
+            editor.clear();
+            editor.putInt(getString(R.string.user), 0);
+            editor.commit();
+            Toast.makeText(this, "Next time you'll need to login again", Toast.LENGTH_SHORT).show();
+            Backendless.UserService.login(sharedPref.getString("userUserName", "null"), sharedPref.getString("userPassword", "null"), new AsyncCallback<BackendlessUser>() {
+                @Override
+                public void handleResponse(BackendlessUser response) {
+
+                    //works as Async
+                }
+
+                @Override
+                public void handleFault(BackendlessFault fault) {
+                    Toast.makeText(HydrationApp.this, "failed to log in", Toast.LENGTH_SHORT).show();
+
+                }
+            });
+        }
+
+//        sharedPref = getSharedPreferences(
+//                getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+//        SharedPreferences.Editor editor = sharedPref.edit();
+
+//        int userExists = sharedPref.getInt(getString(R.string.user), 0);
+////        userExists = 0; //todo delete me later
+//        //checks if previous user exists
+//        if (userExists == 0) {
+//            Intent i = new Intent(this, LoginScreen.class);
+//            startActivity(i);
+//        }
+//        if (userExists == 1) {
+//            editor.clear();
+//            editor.putInt(getString(R.string.user), 0);
+//            editor.commit();
+//            Toast.makeText(this, "Next time you'll need to login again", Toast.LENGTH_SHORT).show();
+//        }
     }
 
     @Override
