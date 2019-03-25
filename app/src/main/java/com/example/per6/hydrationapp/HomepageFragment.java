@@ -7,6 +7,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 
 /**
@@ -28,6 +31,12 @@ public class HomepageFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    private View rootView;
+
+    private ImageView imageDog;
+    private ProgressBar progressBarWater;
+    private TextView textLastSync;
 
     public HomepageFragment() {
         // Required empty public constructor
@@ -61,10 +70,18 @@ public class HomepageFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, //Use as onCreate
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_homepage2, container, false);
+        rootView = inflater.inflate(R.layout.fragment_homepage, container, false);
+        wireWidgets();
+        return rootView;
+    }
+
+    private void wireWidgets() {
+        imageDog = (ImageView) rootView.findViewById(R.id.imageDog);
+        progressBarWater = (ProgressBar) rootView.findViewById(R.id.progressBarWater);
+        textLastSync = (TextView) rootView.findViewById(R.id.textLastSync);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
