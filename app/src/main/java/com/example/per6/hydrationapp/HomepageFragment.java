@@ -77,7 +77,7 @@ public class HomepageFragment extends Fragment {
         wireWidgets();
         return rootView;
     }
-
+  //in the arms of an angel
     private void wireWidgets() {
         imageDog = (ImageView) rootView.findViewById(R.id.imageDog);
         progressBarWater = (ProgressBar) rootView.findViewById(R.id.progressBarWater);
