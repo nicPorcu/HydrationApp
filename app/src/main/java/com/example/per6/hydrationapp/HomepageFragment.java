@@ -90,7 +90,7 @@ public class HomepageFragment extends Fragment {
             mListener.onFragmentInteraction(uri);
         }
     }
-
+// wake me up
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
