@@ -35,6 +35,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void wireWidgets() {
+        Log.d(TAG, "wireWidgets: wire widgets");
         submitButton=(Button)findViewById(R.id.button_submit);
         usernameEdittext=(EditText) findViewById(R.id.login_edittext_username);
         passwordEdittext=(EditText) findViewById(R.id.login_edittext_password);
@@ -44,15 +45,18 @@ public class LoginActivity extends AppCompatActivity {
                 Backendless.UserService.login(usernameEdittext.getText().toString(), passwordEdittext.getText().toString(), new AsyncCallback<BackendlessUser>() {
                     @Override
                     public void handleResponse(BackendlessUser response) {
+                        Log.d(TAG, "handleResponse: handleResponse");
                         String username=(String) response.getProperty("username");
                         String password=response.getPassword();
                         Toast.makeText(LoginActivity.this, "Hello " +username, Toast.LENGTH_SHORT).show();
                         SharedPreferences.Editor editor = sharedPref.edit();
                         editor.putString(getString(R.string.user_ID), response.getUserId());
+                        Log.d(TAG, "handleResponse: "+username);
                         editor.putString("userUserName", username);
                         editor.putString("userPassword", password);
                         editor.putInt(getString(R.string.user), 1);
                         editor.commit();
+                        finish();
                 }
 
                     @Override

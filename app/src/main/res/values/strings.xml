@@ -17,5 +17,7 @@
     <string name="preference_file_key">SharedPreferenceFileKey</string>
     <string name="dog">dog</string>
     <string name="user">user</string>
+    <string name="dogHappy">\"dog happy</string>
+    <string name="user_ID">userID</string>
 
 </resources>

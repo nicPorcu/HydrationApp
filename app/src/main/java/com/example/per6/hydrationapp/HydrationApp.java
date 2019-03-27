@@ -40,6 +40,7 @@ public class HydrationApp extends AppCompatActivity
         setContentView(R.layout.activity_home_page);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        Backendless.initApp(this, BackendlessSettings.APP_ID, BackendlessSettings.API_KEY);
 
 
 
