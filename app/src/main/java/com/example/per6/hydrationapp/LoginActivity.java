@@ -46,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void handleResponse(BackendlessUser response) {
                         Log.d(TAG, "handleResponse: handleResponse");
-                        String username=(String) response.getProperty("username");
+                        String username=(String) response.getProperty("name");
                         String password=response.getPassword();
                         Toast.makeText(LoginActivity.this, "Hello " +username, Toast.LENGTH_SHORT).show();
                         SharedPreferences.Editor editor = sharedPref.edit();
@@ -56,12 +56,15 @@ public class LoginActivity extends AppCompatActivity {
                         editor.putString("userPassword", password);
                         editor.putInt(getString(R.string.user), 1);
                         editor.commit();
+                        String check=sharedPref.getString("userUserName", null);
+                        Log.d(TAG, "handleResponse: "+check);
+
                         finish();
                 }
 
                     @Override
                     public void handleFault(BackendlessFault fault) {
-                        Log.d(TAG, "handleFault: "+fault.getCode());
+                        Log.d(TAG, "handleFault: "+fault.getMessage());
                     }
 
             });

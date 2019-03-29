@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -27,6 +28,7 @@ import com.backendless.exceptions.BackendlessFault;
 
 public class HydrationApp extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
+    private static final String TAG = "HydrationApp";
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
     private Context context;
@@ -84,21 +86,26 @@ public class HydrationApp extends AppCompatActivity
         if (userExists == 0) {
             Intent i = new Intent(this, LoginActivity.class);
             startActivity(i);
+            Log.d(TAG, "logIn: ");
         }
         if (userExists == 1) {
             editor.clear();
             editor.putInt(getString(R.string.user), 0);
             editor.commit();
             Toast.makeText(this, "Next time you'll need to login again", Toast.LENGTH_SHORT).show();
-            Backendless.UserService.login(sharedPref.getString("userUserName", "null"), sharedPref.getString("userPassword", "null"), new AsyncCallback<BackendlessUser>() {
+            String name=sharedPref.getString("userUserName", "null");
+            String password=sharedPref.getString("userPassword", "null");
+            Log.d(TAG, "logIn: "+name+"   "+password);
+            Backendless.UserService.login(name,password, new AsyncCallback<BackendlessUser>() {
                 @Override
                 public void handleResponse(BackendlessUser response) {
-
+                    Toast.makeText(HydrationApp.this, "Hello"+ response.getProperty("name"), Toast.LENGTH_SHORT).show();
                     //works as Async
                 }
 
                 @Override
                 public void handleFault(BackendlessFault fault) {
+                    Log.d(TAG, "handleFault: "+ fault.getMessage());
                     Toast.makeText(HydrationApp.this, "failed to log in", Toast.LENGTH_SHORT).show();
 
                 }
