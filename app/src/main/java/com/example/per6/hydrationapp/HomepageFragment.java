@@ -38,6 +38,8 @@ public class HomepageFragment extends Fragment {
     private ProgressBar progressBarWater;
     private TextView textLastSync;
 
+    private double dogLevel;
+
     public HomepageFragment() {
         // Required empty public constructor
     }
@@ -75,13 +77,35 @@ public class HomepageFragment extends Fragment {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_homepage, container, false);
         wireWidgets();
+        //dogChange(0.0);
+        //imageDog.setImageResource(R.drawable.ic_menu_camera);
         return rootView;
     }
-  //in the arms of an angel
+
     private void wireWidgets() {
-        imageDog = (ImageView) rootView.findViewById(R.id.imageDog);
-        progressBarWater = (ProgressBar) rootView.findViewById(R.id.progressBarWater);
-        textLastSync = (TextView) rootView.findViewById(R.id.textLastSync);
+        imageDog = rootView.findViewById(R.id.imageDog);
+        progressBarWater = rootView.findViewById(R.id.progressBarWater);
+        textLastSync = rootView.findViewById(R.id.textLastSync);
+    }
+
+    private void dogChange(double change){
+        dogLevel = 1.5;
+        if(!(dogLevel + change > 2) || !(dogLevel + change < 0)){
+            dogLevel += change;
+        }
+        else{
+            if(dogLevel + change > 2 ) {dogLevel = 2;}
+            else{dogLevel = 0;}
+        }
+        if(dogLevel < .75) {
+            imageDog.setImageResource(R.drawable.sad_dog_image);
+        }
+        if(dogLevel >= .75 && dogLevel <= 1.25){
+            imageDog.setImageResource(R.drawable.neutral_dog_image);
+        }
+        if(dogLevel > 1.25){
+            imageDog.setImageResource(R.drawable.happy_dog_image);
+        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -90,7 +114,7 @@ public class HomepageFragment extends Fragment {
             mListener.onFragmentInteraction(uri);
         }
     }
-// wake me up
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -108,7 +132,7 @@ public class HomepageFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
-//COUNTRY ROAD
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
