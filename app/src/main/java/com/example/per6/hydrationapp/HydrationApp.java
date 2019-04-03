@@ -22,8 +22,12 @@ import android.widget.Toast;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
+import com.backendless.DeviceRegistration;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class HydrationApp extends AppCompatActivity
@@ -130,6 +134,24 @@ public class HydrationApp extends AppCompatActivity
 //            Toast.makeText(this, "Next time you'll need to login again", Toast.LENGTH_SHORT).show();
 //        }
     }
+
+//    public void registerDevice(){
+//        List<String> channels = new ArrayList<String>();
+//        channels.add( "default" );
+//        Backendless.Messaging.registerDevice(channels, new AsyncCallback<DeviceRegistrationResult>() {
+//            @Override
+//            public void handleResponse(DeviceRegistrationResult response) {
+//                Toast.makeText( context, "Device registered!",
+//                        Toast.LENGTH_LONG).show();
+//            }
+//
+//            @Override
+//            public void handleFault(BackendlessFault fault) {
+//                Toast.makeText( context, "Error registering " + fault.getMessage(),
+//                        Toast.LENGTH_LONG).show();
+//            }
+//        });
+//    }
 
     @Override
     public void onBackPressed() {

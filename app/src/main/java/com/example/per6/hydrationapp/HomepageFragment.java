@@ -98,13 +98,13 @@ public class HomepageFragment extends Fragment {
             else{dogLevel = 0;}
         }
         if(dogLevel < .75) {
-            imageDog.setImageResource(R.drawable.sad_dog_image);
+            //imageDog.setImageResource(R.drawable.sad_dog_image);
         }
         if(dogLevel >= .75 && dogLevel <= 1.25){
-            imageDog.setImageResource(R.drawable.neutral_dog_image);
+            //imageDog.setImageResource(R.drawable.neutral_dog_image);
         }
         if(dogLevel > 1.25){
-            imageDog.setImageResource(R.drawable.happy_dog_image);
+            //imageDog.setImageResource(R.drawable.happy_dog_image);
         }
     }
 
