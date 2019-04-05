@@ -8,12 +8,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -21,6 +23,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button submitButton;
     private EditText usernameEdittext, passwordEdittext;
     private SharedPreferences sharedPref;
+    private TextView googleSigninTextview;
 
 
 
@@ -39,6 +42,13 @@ public class LoginActivity extends AppCompatActivity {
         submitButton=(Button)findViewById(R.id.button_submit);
         usernameEdittext=(EditText) findViewById(R.id.login_edittext_username);
         passwordEdittext=(EditText) findViewById(R.id.login_edittext_password);
+        googleSigninTextview=(TextView) findViewById(R.id.textview_google_signin);
+        googleSigninTextview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                googleSignIn();
+            }
+        });
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,6 +82,13 @@ public class LoginActivity extends AppCompatActivity {
 
     });
 
+
+    }
+
+    public void googleSignIn(){
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
 
     }
 }

@@ -5,8 +5,8 @@ android {
         config {
             keyAlias 'android'
             keyPassword 'android'
-            storeFile file('C:/Users/nicolo/.android/debug.keystore')
             storePassword 'android'
+            storeFile file('config')
         }
     }
     compileSdkVersion 28
@@ -17,6 +17,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.config
     }
     buildTypes {
         release {
@@ -26,6 +27,8 @@ android {
         debug {
             signingConfig signingConfigs.config
         }
+    }
+    productFlavors {
     }
 }
 
