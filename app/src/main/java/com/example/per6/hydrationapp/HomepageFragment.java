@@ -87,7 +87,7 @@ public class HomepageFragment extends Fragment {
         progressBarWater = rootView.findViewById(R.id.progressBarWater);
         textLastSync = rootView.findViewById(R.id.textLastSync);
     }
-// WEST VIRGINIA
+
     private void dogChange(double change){
         dogLevel = 1.5;
         if(!(dogLevel + change > 2) || !(dogLevel + change < 0)){
