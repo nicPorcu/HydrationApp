@@ -14,7 +14,7 @@ import com.example.per6.hydrationapp.leaderboardDisplayerContent;
 import com.example.per6.hydrationapp.leaderboardDisplayerContent.leaderboardDisplayerItem;
 
 /**
- * A fragment representing a list of Items.
+ * A fragment repr esenting a list of Items.
  * <p/>
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
