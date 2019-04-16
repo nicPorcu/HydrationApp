@@ -4,12 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -22,12 +19,8 @@ import android.widget.Toast;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
-import com.backendless.DeviceRegistration;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class HydrationApp extends AppCompatActivity
@@ -198,7 +191,7 @@ public class HydrationApp extends AppCompatActivity
             currentFragment=new leaderboardFragment();
 
         } else if (id == R.id.nav_myInfo) {
-            currentFragment=new UserInfoFragment();
+            currentFragment=new MyWaterBottlesFragment();
 
         } else if (id == R.id.nav_customization) {
             currentFragment=new CustomizationFragment();

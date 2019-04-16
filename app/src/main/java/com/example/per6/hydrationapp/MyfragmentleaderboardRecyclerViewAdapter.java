@@ -18,11 +18,11 @@ import java.util.List;
  */
 public class MyfragmentleaderboardRecyclerViewAdapter extends RecyclerView.Adapter<MyfragmentleaderboardRecyclerViewAdapter.ViewHolder> {
 
-    private final List<leaderboardDisplayerItem> mValues;
+    private final List<User> users;
     private final OnListFragmentInteractionListener mListener;
 
-    public MyfragmentleaderboardRecyclerViewAdapter(List<leaderboardDisplayerItem> items, OnListFragmentInteractionListener listener) {
-        mValues = items;
+    public MyfragmentleaderboardRecyclerViewAdapter(List<User> items, OnListFragmentInteractionListener listener) {
+        users = items;
         mListener = listener;
     }
 
@@ -35,9 +35,9 @@ public class MyfragmentleaderboardRecyclerViewAdapter extends RecyclerView.Adapt
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        User user= users.get(position);
+        holder.mIdView.setText(users.get(position).getName());
+        holder.mContentView.setText(users.get(position).getCurrentStreak());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,7 +53,7 @@ public class MyfragmentleaderboardRecyclerViewAdapter extends RecyclerView.Adapt
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return users.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

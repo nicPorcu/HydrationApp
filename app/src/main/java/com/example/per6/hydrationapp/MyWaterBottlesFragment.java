@@ -12,12 +12,12 @@ import android.view.ViewGroup;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link UserInfoFragment.OnFragmentInteractionListener} interface
+ * {@link MyWaterBottlesFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link UserInfoFragment#newInstance} factory method to
+ * Use the {@link MyWaterBottlesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class UserInfoFragment extends Fragment {
+public class MyWaterBottlesFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -29,7 +29,7 @@ public class UserInfoFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public UserInfoFragment() {
+    public MyWaterBottlesFragment() {
         // Required empty public constructor
     }
 
@@ -39,11 +39,11 @@ public class UserInfoFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment UserInfoFragment.
+     * @return A new instance of fragment MyWaterBottlesFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static UserInfoFragment newInstance(String param1, String param2) {
-        UserInfoFragment fragment = new UserInfoFragment();
+    public static MyWaterBottlesFragment newInstance(String param1, String param2) {
+        MyWaterBottlesFragment fragment = new MyWaterBottlesFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);

@@ -16,26 +16,19 @@ public class leaderboardDisplayerContent {
     /**
      * An array of sample (dummy) items.
      */
-    public static final List<leaderboardDisplayerItem> ITEMS = new ArrayList<leaderboardDisplayerItem>();
+    public static final List<User> ITEMS = new ArrayList<User>();
 
     /**
      * A map of sample (dummy) items, by ID.
      */
     public static final Map<String, leaderboardDisplayerItem> ITEM_MAP = new HashMap<String, leaderboardDisplayerItem>();
 
-    private static final int COUNT = 25;
 
-    static {
-        // Add some sample items.
-        for (int i = 1; i <= COUNT; i++) {
-            addItem(createDummyItem(i));
-        }
-    }
 
-    private static void addItem(leaderboardDisplayerItem item) {
-        ITEMS.add(item);
-        ITEM_MAP.put(item.id, item);
-    }
+
+
+
+
 
     private static leaderboardDisplayerItem createDummyItem(int position) {
         return new leaderboardDisplayerItem(String.valueOf(position), "Item " + position, makeDetails(position));
