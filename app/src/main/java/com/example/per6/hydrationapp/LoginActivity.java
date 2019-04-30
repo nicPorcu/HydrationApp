@@ -15,7 +15,6 @@ import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -46,7 +45,7 @@ public class LoginActivity extends AppCompatActivity {
         googleSigninTextview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                googleSignIn();
+                //googleSignIn();
             }
         });
         submitButton.setOnClickListener(new View.OnClickListener() {
@@ -85,10 +84,10 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    public void googleSignIn(){
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-
-    }
+//    public void googleSignIn(){
+//        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//                .requestEmail()
+//                .build();
+//
+//    }
 }

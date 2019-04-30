@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.backendless.Backendless;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
+import com.backendless.persistence.DataQueryBuilder;
 
 
 import java.util.ArrayList;
@@ -91,8 +92,12 @@ public class MyWaterBottlesFragment extends Fragment {
     }
 
     private void displayBottles() {
-        String query= "WaterBottle";
-        Backendless.Data.of(WaterBottle.class).find( query, new AsyncCallback<List<WaterBottle>>(){
+        String query= "h's water bottle";
+        StringBuilder whereClause = new StringBuilder();
+        whereClause.append("waterBottle like '%" + query + "%'");
+        DataQueryBuilder queryBuilder = DataQueryBuilder.create();
+        queryBuilder.setWhereClause(whereClause.toString());
+        Backendless.Data.of(WaterBottle.class).find( queryBuilder, new AsyncCallback<List<WaterBottle>>(){
 
             @Override
             public void handleResponse(List<WaterBottle> response) {
