@@ -38,7 +38,7 @@ public class KiwiHydrationApp extends AppCompatActivity
         setContentView(R.layout.activity_home_page);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        //Backendless.initApp(this, BackendlessSettings.APP_ID, BackendlessSettings.API_KEY);
+        Backendless.initApp(this, BackendlessSettings.APP_ID, BackendlessSettings.API_KEY);
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -58,7 +58,7 @@ public class KiwiHydrationApp extends AppCompatActivity
         fm.beginTransaction()
                 .replace(R.id.fragment_container, currentFragment)
                 .commit();
-        //logIn();
+        logIn();
 
 
 
