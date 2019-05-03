@@ -13,7 +13,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -23,9 +22,9 @@ import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 
 
-public class HydrationApp extends AppCompatActivity
+public class KiwiHydrationApp extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
-    private static final String TAG = "HydrationApp";
+    private static final String TAG = "KiwiHydrationApp";
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
     private Context context;
@@ -39,10 +38,7 @@ public class HydrationApp extends AppCompatActivity
         setContentView(R.layout.activity_home_page);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        Backendless.initApp(this, BackendlessSettings.APP_ID, BackendlessSettings.API_KEY);
-
-
-
+        //Backendless.initApp(this, BackendlessSettings.APP_ID, BackendlessSettings.API_KEY);
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -62,7 +58,7 @@ public class HydrationApp extends AppCompatActivity
         fm.beginTransaction()
                 .replace(R.id.fragment_container, currentFragment)
                 .commit();
-        logIn();
+        //logIn();
 
 
 
@@ -96,14 +92,14 @@ public class HydrationApp extends AppCompatActivity
             Backendless.UserService.login(name,password, new AsyncCallback<BackendlessUser>() {
                 @Override
                 public void handleResponse(BackendlessUser response) {
-                    Toast.makeText(HydrationApp.this, "Hello"+ response.getProperty("name"), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(KiwiHydrationApp.this, "Hello"+ response.getProperty("name"), Toast.LENGTH_SHORT).show();
                     //works as Async
                 }
 
                 @Override
                 public void handleFault(BackendlessFault fault) {
                     Log.d(TAG, "handleFault: "+ fault.getMessage());
-                    Toast.makeText(HydrationApp.this, "failed to log in", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(KiwiHydrationApp.this, "failed to log in", Toast.LENGTH_SHORT).show();
 
                 }
             });
@@ -154,28 +150,6 @@ public class HydrationApp extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.home_page, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
