@@ -6,7 +6,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.example.per6.hydrationapp"
-        minSdkVersion 15
+        minSdkVersion 18
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -21,6 +21,10 @@ android {
         }
     }
     productFlavors {
+    }
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
     }
 }
 
@@ -44,6 +48,15 @@ dependencies {
         // excluding org.json which is provided by Android
         exclude group: 'org.json', module: 'json'
     }
+
+    // Nordic
+    implementation 'no.nordicsemi.android.support.v18:scanner:1.2.0'
+    implementation 'no.nordicsemi.android:dfu:1.6.1'
+
+    //  Architecture Components
+    implementation 'android.arch.lifecycle:extensions:1.1.1'
+    // compile "android.arch.lifecycle:compiler:1.0.0-rc1"
+    implementation 'android.arch.lifecycle:common-java8:1.1.1'
 }
 
 
