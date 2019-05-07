@@ -520,5 +520,6 @@
     <string name="calibrateButtonText">Calibrate</string>
     <string name="syncButtonText">Sync</string>
     <string name="scanSkipButton">Skip</string>
+    <string name="title_activity_bluetooth">BluetoothActivity</string>
 
 </resources>

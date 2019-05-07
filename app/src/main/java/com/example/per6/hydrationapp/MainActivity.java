@@ -86,9 +86,10 @@ public class MainActivity extends AppCompatActivity
 
         if (savedInstanceState == null) {
             // Set mainmenu fragment
+            currentFragment=new HomepageFragment();
             mMainFragment = MainFragment.newInstance();
             fm.beginTransaction()
-                    .add(R.id.contentLayout, mMainFragment, "Main")
+                    .add(R.id.contentLayout, currentFragment, "Main")
                     .commit();
 
         } else {
