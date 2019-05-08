@@ -71,8 +71,8 @@ import static android.content.Context.CLIPBOARD_SERVICE;
 import static android.content.Context.MODE_PRIVATE;
 
 public class BluetoothActivity extends AppCompatActivity implements ScannerStatusFragmentDialog.onScannerStatusCancelListener {
+    private static final String TAG = "BluetoothActivity";
     // Constants
-    private final static String TAG = ScannerFragment.class.getSimpleName();
 
 
     private boolean hasUserAlreadyBeenAskedAboutBluetoothStatus = false;
