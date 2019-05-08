@@ -1,15 +1,21 @@
 package com.example.per6.hydrationapp;
 
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class WaterBottle implements Parcelable {
-    String bottleName;
-    String jsonStoreString;
+import java.util.ArrayList;
+import java.util.List;
 
-    public WaterBottle(String bottleName, String jsonStoreString) {
+public class WaterBottle implements Parcelable {
+    private String bottleName;
+    private List<BottleFillDataPoint> bottleFillValues;
+    private int capacity;
+    private String objectId;
+
+    public WaterBottle(String bottleName, List<BottleFillDataPoint> bottleFillValues) {
         this.bottleName = bottleName;
-        this.jsonStoreString = jsonStoreString;
+        this.bottleFillValues = bottleFillValues;
     }
 
     public WaterBottle() {
@@ -23,17 +29,47 @@ public class WaterBottle implements Parcelable {
         this.bottleName = bottleName;
     }
 
-    public String getJsonStoreString() {
-        return jsonStoreString;
+    public List<BottleFillDataPoint> getBottleFillValues() {
+        return bottleFillValues;
     }
 
-    public void setJsonStoreString(String jsonStoreString) {
-        this.jsonStoreString = jsonStoreString;
+    public void setBottleFillValues(List<BottleFillDataPoint> bottleFillValues) {
+        this.bottleFillValues = bottleFillValues;
     }
+
+
+
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+
+    public String getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
+    }
+
+
+
+
 
     protected WaterBottle(Parcel in) {
         bottleName = in.readString();
-        jsonStoreString = in.readString();
+        if (in.readByte() == 0x01) {
+            bottleFillValues = new ArrayList<BottleFillDataPoint>();
+            in.readList(bottleFillValues, Double.class.getClassLoader());
+        } else {
+            bottleFillValues = null;
+        }
+        capacity = in.readInt();
+        objectId = in.readString();
     }
 
     @Override
@@ -44,7 +80,14 @@ public class WaterBottle implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(bottleName);
-        dest.writeString(jsonStoreString);
+        if (bottleFillValues == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(bottleFillValues);
+        }
+        dest.writeInt(capacity);
+        dest.writeString(objectId);
     }
 
     @SuppressWarnings("unused")

@@ -1,14 +1,17 @@
 package com.example.per6.hydrationapp;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -16,6 +19,10 @@ public class WaterBottleAdapter extends RecyclerView.Adapter<WaterBottleAdapter.
     private RecyclerViewOnClick click;
     private final List<WaterBottle> waterBottles;
     private Context context;
+    private View rootview;
+    public static final String TAG= "WaterBottleAdapter";
+    private WaterBottle mRecentlyDeletedItem;
+    private int mRecentlyDeletedItemPosition;
 
 
 
@@ -28,16 +35,20 @@ public class WaterBottleAdapter extends RecyclerView.Adapter<WaterBottleAdapter.
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.fragment_user_info, viewGroup, false);
-        return new ViewHolder(view, click);
+        rootview = LayoutInflater.from(viewGroup.getContext())
+                .inflate(R.layout.water_bottle_info_item, viewGroup, false);
+        return new ViewHolder(rootview, click);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        WaterBottle bottle= waterBottles.get(position);
-        holder.mIdView.setText(position);
-        holder.mContentView.setText(waterBottles.get(position).getBottleName());
+        Log.d(TAG, "onBindViewHolder: "+position);
+        Log.d(TAG, "onBindViewHolder: "+ holder.getAdapterPosition());
+
+            holder.mNameView.setText(waterBottles.get(position).getBottleName());
+            holder.mCapacityView.setText(waterBottles.get(position).getCapacity()+"oz");
+
+
 
 
         }
@@ -49,27 +60,42 @@ public class WaterBottleAdapter extends RecyclerView.Adapter<WaterBottleAdapter.
         return waterBottles.size();
     }
 
+    public List<WaterBottle> getWaterBottles() {
+        return waterBottles;
+    }
+
+    public Context getContext(){
+        return context;
+    }
+
+
+
+
+
+
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public final View mView;
+        public  View mView;
         private RecyclerViewOnClick recyclerViewOnClick;
-        private final TextView mIdView;
-        private final TextView mContentView;
+
+        private TextView mNameView;
+        private TextView mCapacityView;
 
 
 
         public ViewHolder(View view, RecyclerViewOnClick click) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.item_number);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            Log.d(TAG, "ViewHolder: hi");
+            mNameView = (TextView) view.findViewById(R.id.water_bottle_name);
+            mCapacityView= view.findViewById(R.id.bottle_capacity);
             recyclerViewOnClick=click;
             itemView.setOnClickListener(this);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + mNameView.getText() + "'";
         }
 
         @Override

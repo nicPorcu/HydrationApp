@@ -1,4 +1,4 @@
-package com.example.per6.hydrationapp.leaderboard;
+package com.example.per6.hydrationapp;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,10 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.per6.hydrationapp.leaderboard.LeaderboardFragment.OnListFragmentInteractionListener;
-import com.example.per6.hydrationapp.leaderboard.LeaderboardDisplayerContent.leaderboardDisplayerItem;
-import com.example.per6.hydrationapp.R;
-import com.example.per6.hydrationapp.User;
+import com.example.per6.hydrationapp.leaderboardFragment.OnListFragmentInteractionListener;
+import com.example.per6.hydrationapp.leaderboardDisplayerContent.leaderboardDisplayerItem;
 
 import java.util.List;
 
@@ -18,12 +16,12 @@ import java.util.List;
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class MyFragmentLeaderboardRecyclerViewAdapter extends RecyclerView.Adapter<MyFragmentLeaderboardRecyclerViewAdapter.ViewHolder> {
+public class MyfragmentleaderboardRecyclerViewAdapter extends RecyclerView.Adapter<MyfragmentleaderboardRecyclerViewAdapter.ViewHolder> {
 
     private final List<User> users;
     private final OnListFragmentInteractionListener mListener;
 
-    public MyFragmentLeaderboardRecyclerViewAdapter(List<User> items, OnListFragmentInteractionListener listener) {
+    public MyfragmentleaderboardRecyclerViewAdapter(List<User> items, OnListFragmentInteractionListener listener) {
         users = items;
         mListener = listener;
     }

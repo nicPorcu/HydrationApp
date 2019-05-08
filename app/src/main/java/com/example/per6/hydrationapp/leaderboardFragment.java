@@ -1,4 +1,4 @@
-package com.example.per6.hydrationapp.leaderboard;
+package com.example.per6.hydrationapp;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,8 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.per6.hydrationapp.leaderboard.LeaderboardDisplayerContent.leaderboardDisplayerItem;
-import com.example.per6.hydrationapp.R;
+import com.example.per6.hydrationapp.leaderboardDisplayerContent;
+import com.example.per6.hydrationapp.leaderboardDisplayerContent.leaderboardDisplayerItem;
 
 /**
  * A fragment repr esenting a list of Items.
@@ -19,7 +19,7 @@ import com.example.per6.hydrationapp.R;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class LeaderboardFragment extends Fragment {
+public class leaderboardFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -31,13 +31,13 @@ public class LeaderboardFragment extends Fragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public LeaderboardFragment() {
+    public leaderboardFragment() {
     }
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static LeaderboardFragment newInstance(int columnCount) {
-        LeaderboardFragment fragment = new LeaderboardFragment();
+    public static leaderboardFragment newInstance(int columnCount) {
+        leaderboardFragment fragment = new leaderboardFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
@@ -67,7 +67,7 @@ public class LeaderboardFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyFragmentLeaderboardRecyclerViewAdapter(LeaderboardDisplayerContent.ITEMS, mListener));
+            recyclerView.setAdapter(new MyfragmentleaderboardRecyclerViewAdapter(leaderboardDisplayerContent.ITEMS, mListener));
         }
         return view;
     }

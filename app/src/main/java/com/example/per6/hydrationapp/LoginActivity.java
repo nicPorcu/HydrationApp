@@ -1,8 +1,6 @@
 package com.example.per6.hydrationapp;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,7 +23,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText usernameEdittext, passwordEdittext;
     private SharedPreferences sharedPref;
     private TextView googleSigninTextview;
-    private Context context;
+
 
 
 
@@ -34,7 +32,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-        Backendless.initApp(this, BackendlessSettings.APP_ID, BackendlessSettings.API_KEY);
         wireWidgets();
 
     }
@@ -45,7 +42,6 @@ public class LoginActivity extends AppCompatActivity {
         usernameEdittext=(EditText) findViewById(R.id.login_edittext_username);
         passwordEdittext=(EditText) findViewById(R.id.login_edittext_password);
         googleSigninTextview=(TextView) findViewById(R.id.textview_google_signin);
-        context = this;
         googleSigninTextview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,12 +54,10 @@ public class LoginActivity extends AppCompatActivity {
                 Backendless.UserService.login(usernameEdittext.getText().toString(), passwordEdittext.getText().toString(), new AsyncCallback<BackendlessUser>() {
                     @Override
                     public void handleResponse(BackendlessUser response) {
-                        //log in
                         Log.d(TAG, "handleResponse: handleResponse");
-                        String username = (String) response.getProperty("name");
-                        String password = response.getPassword();
+                        String username=(String) response.getProperty("name");
+                        String password=response.getPassword();
                         Toast.makeText(LoginActivity.this, "Hello " +username, Toast.LENGTH_SHORT).show();
-                        //save info
                         SharedPreferences.Editor editor = sharedPref.edit();
                         editor.putString(getString(R.string.user_ID), response.getUserId());
                         Log.d(TAG, "handleResponse: "+username);
@@ -71,11 +65,10 @@ public class LoginActivity extends AppCompatActivity {
                         editor.putString("userPassword", password);
                         editor.putInt(getString(R.string.user), 1);
                         editor.commit();
-                        String check = sharedPref.getString("userUserName", null);
+                        String check=sharedPref.getString("userUserName", null);
                         Log.d(TAG, "handleResponse: "+check);
-                        //start main activity
-                        Intent i = new Intent(context, MainActivity.class);
-                        startActivity(i);
+
+                        finish();
                 }
 
                     @Override
@@ -87,6 +80,7 @@ public class LoginActivity extends AppCompatActivity {
         }
 
     });
+
 
 
     }

@@ -1,11 +1,17 @@
 package com.example.per6.hydrationapp;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,13 +27,12 @@ import com.backendless.persistence.DataQueryBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-import weborb.util.ObjectProperty;
+import static android.app.Activity.RESULT_OK;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link MyWaterBottlesFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link MyWaterBottlesFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -39,6 +44,7 @@ public class MyWaterBottlesFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     private static final String TAG = "WaterBottlesFragment";
     private WaterBottleAdapter adapter;
+    private LinearLayoutManager layoutManager;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -46,8 +52,10 @@ public class MyWaterBottlesFragment extends Fragment {
     private List<WaterBottle> waterBottleList;
     private RecyclerView recyclerView;
     private View rootView;
+    private RecyclerViewOnClick click;
+    private FloatingActionButton addButton;
+    private int requestCode;
 
-    private OnFragmentInteractionListener mListener;
 
     public MyWaterBottlesFragment() {
         // Required empty public constructor
@@ -71,6 +79,36 @@ public class MyWaterBottlesFragment extends Fragment {
         return fragment;
     }
 
+    public void areYaSure(int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle(R.string.dialog_message);
+
+        builder.setPositiveButton(R.string.yes, (dialog, id) -> deleteItem(position));
+        builder.setNegativeButton(R.string.no, (dialog, which) -> { getBottles();});
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+    }
+
+    public void deleteItem(int position) {
+        WaterBottle b= waterBottleList.remove(position);
+        adapter.notifyDataSetChanged();
+        Backendless.Persistence.of( WaterBottle.class ).remove( b,
+                new AsyncCallback<Long>()
+                {
+                    public void handleResponse( Long response )
+                    {
+                        // Contact has been deleted. The response is the
+                        // time in milliseconds when the object was deleted
+                    }
+                    public void handleFault( BackendlessFault fault )
+                    {
+                        // an error has occurred, the error code can be
+                        // retrieved with fault.getCode()
+                    }
+                } );        Log.d(TAG, "deleteItem: ");
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,15 +124,16 @@ public class MyWaterBottlesFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_user_info, container, false);
 
         wireWidgets();
-        displayBottles();
+        getBottles();
         // Inflate the layout for this fragment
         return rootView;
     }
 
-    private void displayBottles() {
-        String query= "h's water bottle";
+    private void getBottles() {
+        waterBottleList.clear();
+        String query= "ownerId= '"+ Backendless.UserService.CurrentUser().getUserId()+"'";
         StringBuilder whereClause = new StringBuilder();
-        whereClause.append("waterBottle like '%" + query + "%'");
+        whereClause.append( query);
         DataQueryBuilder queryBuilder = DataQueryBuilder.create();
         queryBuilder.setWhereClause(whereClause.toString());
         Backendless.Data.of(WaterBottle.class).find( queryBuilder, new AsyncCallback<List<WaterBottle>>(){
@@ -102,7 +141,9 @@ public class MyWaterBottlesFragment extends Fragment {
             @Override
             public void handleResponse(List<WaterBottle> response) {
                 waterBottleList.addAll(response);
+                Log.d(TAG, "handleResponse: "+ waterBottleList.toString());
                 adapter.notifyDataSetChanged();
+                Log.d(TAG, "handleResponse: stuff up");
             }
 
             @Override
@@ -115,47 +156,50 @@ public class MyWaterBottlesFragment extends Fragment {
     }
 
     private void wireWidgets() {
-        waterBottleList=new ArrayList<>();
-        recyclerView=rootView.findViewById(R.id.water_bottle_recycler_view);
+        waterBottleList = new ArrayList<>();
+        requestCode=0;
+        recyclerView = rootView.findViewById(R.id.water_bottle_recycler_view);
+        addButton=rootView.findViewById(R.id.add_button);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(getContext(), bottleEditorActivity.class);
+                intent.putExtra("editMode", true);
+                intent.putExtra("waterBottle", new WaterBottle());
+                startActivityForResult(intent, requestCode);
 
+            }
+        });
+
+        click = new RecyclerViewOnClick() {
+            @Override
+            public void onClick(View v, int pos) {
+                Intent intent=new Intent(getContext(), bottleEditorActivity.class);
+                intent.putExtra("editMode", false);
+                intent.putExtra("waterBottle", waterBottleList.get(pos));
+                startActivityForResult(intent,requestCode);
+            }
+
+        };
+        layoutManager = new LinearLayoutManager(getContext());
+        adapter=new WaterBottleAdapter( waterBottleList, getContext(), click);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(adapter);
+        ItemTouchHelper itemTouchHelper=new ItemTouchHelper(new SwipeToDeleteCallback(adapter, this));
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+        registerForContextMenu(recyclerView);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG, "onActivityResult: "+"activity result");
+        if(this.requestCode==requestCode && resultCode==Activity.RESULT_OK){
+            getBottles();
+
         }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
