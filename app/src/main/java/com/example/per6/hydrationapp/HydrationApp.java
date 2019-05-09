@@ -47,7 +47,6 @@ public class HydrationApp extends AppCompatActivity
         Backendless.initApp(this, BackendlessSettings.APP_ID, BackendlessSettings.API_KEY);
 
 
-//hi
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

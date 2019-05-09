@@ -1,6 +1,7 @@
 package com.example.per6.hydrationapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,14 +24,14 @@ public class LoginActivity extends AppCompatActivity {
     private EditText usernameEdittext, passwordEdittext;
     private SharedPreferences sharedPref;
     private TextView googleSigninTextview;
-
-
+    private Context context;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        context=this;
         sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         wireWidgets();
 
@@ -55,20 +56,24 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void handleResponse(BackendlessUser response) {
                         Log.d(TAG, "handleResponse: handleResponse");
-                        String username=(String) response.getProperty("name");
-                        String password=response.getPassword();
+                        String username = (String) response.getProperty("name");
+                        String password = (String) passwordEdittext.getText().toString();
+
+                        Log.d(TAG, "handleResponse: password "+password);
                         Toast.makeText(LoginActivity.this, "Hello " +username, Toast.LENGTH_SHORT).show();
+                        //save info
                         SharedPreferences.Editor editor = sharedPref.edit();
                         editor.putString(getString(R.string.user_ID), response.getUserId());
                         Log.d(TAG, "handleResponse: "+username);
                         editor.putString("userUserName", username);
-                        editor.putString("userPassword", password);
+                        editor.putString( getString(R.string.password), password);
                         editor.putInt(getString(R.string.user), 1);
                         editor.commit();
-                        String check=sharedPref.getString("userUserName", null);
+                        String check = sharedPref.getString("userUserName", null);
                         Log.d(TAG, "handleResponse: "+check);
-
-                        finish();
+                        //start main activity
+                        Intent i = new Intent(context, MainActivity.class);
+                        startActivity(i);
                 }
 
                     @Override

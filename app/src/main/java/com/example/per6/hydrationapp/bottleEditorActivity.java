@@ -93,21 +93,23 @@ public class bottleEditorActivity extends AppCompatActivity {
         List<BottleFillDataPoint> bottleFillValues=new ArrayList<>();
         bottleFillValues.add(new BottleFillDataPoint(1.2));
         bottleFillValues.add(new BottleFillDataPoint(1.2));
-        waterBottle.setBottleFillValues(bottleFillValues);
-        saveDataPoints(bottleFillValues);
+        waterBottle.setBottleFillValue(bottleFillValues);
+        saveBottle(bottleFillValues);
 
 
 
     }
 
     private void saveDataPoints(List<BottleFillDataPoint> bottleFillValues) {
-        for(BottleFillDataPoint t:bottleFillValues) {
+        List<BottleFillDataPoint> responseList= new ArrayList<>();
 
+        for(BottleFillDataPoint t:bottleFillValues) {
             Backendless.Persistence.save(t, new AsyncCallback<BottleFillDataPoint>() {
                 @Override
                 public void handleResponse(BottleFillDataPoint response) {
                     Log.d(TAG, "handleResponse: dataPointsSaved");
-                    saveBottle();
+                    responseList.add(response);
+                    saveBottle(responseList);
                 }
 
                 @Override
@@ -118,10 +120,12 @@ public class bottleEditorActivity extends AppCompatActivity {
         }
     }
 
-    private void saveBottle() {
+    private void saveBottle(List<BottleFillDataPoint> bottleFillValues) {
         Backendless.Persistence.save(waterBottle, new AsyncCallback<WaterBottle>() {
             public void handleResponse(WaterBottle response) {
                 Toast.makeText(bottleEditorActivity.this, "yay", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "handleResponse: bottle saved"+ response.getBottleName());
+                setChildren(bottleFillValues);
             }
 
             public void handleFault(BackendlessFault fault) {
@@ -140,7 +144,7 @@ public class bottleEditorActivity extends AppCompatActivity {
                     public void handleResponse( Integer response )
                     {
 
-                        Log.i( "MYAPP", "relation has been set");
+                        Log.i( TAG, "handleResponse: yay");
                     }
 
                     @Override

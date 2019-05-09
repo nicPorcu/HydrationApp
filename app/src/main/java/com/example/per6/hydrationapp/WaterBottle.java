@@ -9,13 +9,13 @@ import java.util.List;
 
 public class WaterBottle implements Parcelable {
     private String bottleName;
-    private List<BottleFillDataPoint> bottleFillValues;
+    private List<BottleFillDataPoint> bottleFillValue;
     private int capacity;
     private String objectId;
 
     public WaterBottle(String bottleName, List<BottleFillDataPoint> bottleFillValues) {
         this.bottleName = bottleName;
-        this.bottleFillValues = bottleFillValues;
+        this.bottleFillValue = bottleFillValues;
     }
 
     public WaterBottle() {
@@ -30,11 +30,11 @@ public class WaterBottle implements Parcelable {
     }
 
     public List<BottleFillDataPoint> getBottleFillValues() {
-        return bottleFillValues;
+        return bottleFillValue;
     }
 
-    public void setBottleFillValues(List<BottleFillDataPoint> bottleFillValues) {
-        this.bottleFillValues = bottleFillValues;
+    public void setBottleFillValue(List<BottleFillDataPoint> bottleFillValues) {
+        this.bottleFillValue = bottleFillValues;
     }
 
 
@@ -63,10 +63,10 @@ public class WaterBottle implements Parcelable {
     protected WaterBottle(Parcel in) {
         bottleName = in.readString();
         if (in.readByte() == 0x01) {
-            bottleFillValues = new ArrayList<BottleFillDataPoint>();
-            in.readList(bottleFillValues, Double.class.getClassLoader());
+            bottleFillValue = new ArrayList<BottleFillDataPoint>();
+            in.readList(bottleFillValue, Double.class.getClassLoader());
         } else {
-            bottleFillValues = null;
+            bottleFillValue = null;
         }
         capacity = in.readInt();
         objectId = in.readString();
@@ -80,11 +80,11 @@ public class WaterBottle implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(bottleName);
-        if (bottleFillValues == null) {
+        if (bottleFillValue == null) {
             dest.writeByte((byte) (0x00));
         } else {
             dest.writeByte((byte) (0x01));
-            dest.writeList(bottleFillValues);
+            dest.writeList(bottleFillValue);
         }
         dest.writeInt(capacity);
         dest.writeString(objectId);
