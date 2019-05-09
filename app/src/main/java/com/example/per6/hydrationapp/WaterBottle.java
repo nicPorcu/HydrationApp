@@ -9,13 +9,13 @@ import java.util.List;
 
 public class WaterBottle implements Parcelable {
     private String bottleName;
-    private List<BottleFillDataPoint> bottleFillValue;
+    private List<BottleFillDataPoint> bottleFillDataPoints;
     private int capacity;
     private String objectId;
 
     public WaterBottle(String bottleName, List<BottleFillDataPoint> bottleFillValues) {
         this.bottleName = bottleName;
-        this.bottleFillValue = bottleFillValues;
+        this.bottleFillDataPoints = bottleFillValues;
     }
 
     public WaterBottle() {
@@ -29,12 +29,12 @@ public class WaterBottle implements Parcelable {
         this.bottleName = bottleName;
     }
 
-    public List<BottleFillDataPoint> getBottleFillValues() {
-        return bottleFillValue;
+    public List<BottleFillDataPoint> getBottleFillDataPoints() {
+        return bottleFillDataPoints;
     }
 
-    public void setBottleFillValue(List<BottleFillDataPoint> bottleFillValues) {
-        this.bottleFillValue = bottleFillValues;
+    public void setBottleFillDataPoints(List<BottleFillDataPoint> bottleFillValues) {
+        this.bottleFillDataPoints = bottleFillValues;
     }
 
 
@@ -63,10 +63,10 @@ public class WaterBottle implements Parcelable {
     protected WaterBottle(Parcel in) {
         bottleName = in.readString();
         if (in.readByte() == 0x01) {
-            bottleFillValue = new ArrayList<BottleFillDataPoint>();
-            in.readList(bottleFillValue, Double.class.getClassLoader());
+            bottleFillDataPoints = new ArrayList<BottleFillDataPoint>();
+            in.readList(bottleFillDataPoints, Double.class.getClassLoader());
         } else {
-            bottleFillValue = null;
+            bottleFillDataPoints = null;
         }
         capacity = in.readInt();
         objectId = in.readString();
@@ -80,11 +80,11 @@ public class WaterBottle implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(bottleName);
-        if (bottleFillValue == null) {
+        if (bottleFillDataPoints == null) {
             dest.writeByte((byte) (0x00));
         } else {
             dest.writeByte((byte) (0x01));
-            dest.writeList(bottleFillValue);
+            dest.writeList(bottleFillDataPoints);
         }
         dest.writeInt(capacity);
         dest.writeString(objectId);

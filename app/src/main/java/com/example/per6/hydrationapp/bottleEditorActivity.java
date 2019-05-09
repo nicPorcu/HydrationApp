@@ -92,8 +92,8 @@ public class bottleEditorActivity extends AppCompatActivity {
 
         List<BottleFillDataPoint> bottleFillValues=new ArrayList<>();
         bottleFillValues.add(new BottleFillDataPoint(1.2));
-        bottleFillValues.add(new BottleFillDataPoint(1.2));
-        waterBottle.setBottleFillValue(bottleFillValues);
+        bottleFillValues.add(new BottleFillDataPoint(5));
+        waterBottle.setBottleFillDataPoints(bottleFillValues);
         saveBottle(bottleFillValues);
 
 
@@ -109,7 +109,8 @@ public class bottleEditorActivity extends AppCompatActivity {
                 public void handleResponse(BottleFillDataPoint response) {
                     Log.d(TAG, "handleResponse: dataPointsSaved");
                     responseList.add(response);
-                    saveBottle(responseList);
+                    setChildren(bottleFillValues);
+
                 }
 
                 @Override
@@ -125,7 +126,7 @@ public class bottleEditorActivity extends AppCompatActivity {
             public void handleResponse(WaterBottle response) {
                 Toast.makeText(bottleEditorActivity.this, "yay", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "handleResponse: bottle saved"+ response.getBottleName());
-                setChildren(bottleFillValues);
+                saveDataPoints(bottleFillValues);
             }
 
             public void handleFault(BackendlessFault fault) {
