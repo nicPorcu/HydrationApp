@@ -26,6 +26,8 @@ public class bottleEditorActivity extends AppCompatActivity {
     private WaterBottle waterBottle;
 
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,21 +105,26 @@ public class bottleEditorActivity extends AppCompatActivity {
     private void saveDataPoints(List<BottleFillDataPoint> bottleFillValues) {
         List<BottleFillDataPoint> responseList= new ArrayList<>();
 
-        for(BottleFillDataPoint t:bottleFillValues) {
+        final int bottleFillValuesSize= bottleFillValues.size();
+
+        for(BottleFillDataPoint t: bottleFillValues) {
+
             Backendless.Persistence.save(t, new AsyncCallback<BottleFillDataPoint>() {
                 @Override
                 public void handleResponse(BottleFillDataPoint response) {
                     Log.d(TAG, "handleResponse: dataPointsSaved");
                     responseList.add(response);
-                    setChildren(bottleFillValues);
+                    if (responseList.size() == bottleFillValuesSize)
+                        setChildren(responseList);
+                     }
 
-                }
+                   @Override
+                     public void handleFault(BackendlessFault fault) {
+                        Log.d(TAG, "handleFault: " + fault.getMessage());
+                    }
 
-                @Override
-                public void handleFault(BackendlessFault fault) {
-                    Log.d(TAG, "handleFault: "+fault.getMessage());
-                }
             });
+
         }
     }
 

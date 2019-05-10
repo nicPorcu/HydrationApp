@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -28,13 +29,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
-
+import static com.example.per6.hydrationapp.ConnectedPeripheralFragment.createFragmentArgs;
 
 
 public class MyWaterBottlesFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final String TAG = "WaterBottlesFragment";
+    private static String singlePeripheralIdentifierMaster;
     private WaterBottleAdapter adapter;
     private LinearLayoutManager layoutManager;
 
@@ -48,6 +50,13 @@ public class MyWaterBottlesFragment extends Fragment {
 
     public MyWaterBottlesFragment() {
         // Required empty public constructor
+    }
+
+    public static HomepageFragment newInstance(@Nullable String singlePeripheralIdentifier) {
+        HomepageFragment fragment = new HomepageFragment();
+        fragment.setArguments(createFragmentArgs(singlePeripheralIdentifier));
+        singlePeripheralIdentifierMaster = singlePeripheralIdentifier;
+        return fragment;
     }
 
 
