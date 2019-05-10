@@ -99,8 +99,8 @@ public class BottleEditorActivity extends AppCompatActivity {
 
         List<BottleFillDataPoint> bottleFillValues = new ArrayList<>();
         bottleFillValues.add(new BottleFillDataPoint(1.2));
-        bottleFillValues.add(new BottleFillDataPoint(1.2));
-        waterBottle.setBottleFillValue(bottleFillValues);
+        bottleFillValues.add(new BottleFillDataPoint(5));
+        waterBottle.setBottleFillDataPoints(bottleFillValues);
         saveBottle(bottleFillValues);
 
 
@@ -110,20 +110,24 @@ public class BottleEditorActivity extends AppCompatActivity {
     private void saveDataPoints(List<BottleFillDataPoint> bottleFillValues) {
         List<BottleFillDataPoint> responseList= new ArrayList<>();
 
-        for(BottleFillDataPoint t:bottleFillValues) {
+        final int bottleFillValuesSize= bottleFillValues.size();
+
+        for(BottleFillDataPoint t: bottleFillValues) {
 
             Backendless.Persistence.save(t, new AsyncCallback<BottleFillDataPoint>() {
                 @Override
                 public void handleResponse(BottleFillDataPoint response) {
                     Log.d(TAG, "handleResponse: dataPointsSaved");
                     responseList.add(response);
-                    saveBottle(responseList);
-                }
+                    if (responseList.size() == bottleFillValuesSize)
+                        setChildren(responseList);
+                     }
 
-                @Override
-                public void handleFault(BackendlessFault fault) {
-                    Log.d(TAG, "handleFault: "+fault.getMessage());
-                }
+                   @Override
+                     public void handleFault(BackendlessFault fault) {
+                        Log.d(TAG, "handleFault: " + fault.getMessage());
+                    }
+
             });
         }
     }
@@ -131,9 +135,9 @@ public class BottleEditorActivity extends AppCompatActivity {
     private void saveBottle(List<BottleFillDataPoint> bottleFillValues) {
         Backendless.Persistence.save(waterBottle, new AsyncCallback<WaterBottle>() {
             public void handleResponse(WaterBottle response) {
-                Toast.makeText(BottleEditorActivity.this, "yay", Toast.LENGTH_SHORT).show();
+                Toast.makeText(bottleEditorActivity.this, "yay", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "handleResponse: bottle saved"+ response.getBottleName());
-                setChildren(bottleFillValues);
+                saveDataPoints(bottleFillValues);
             }
 
             public void handleFault(BackendlessFault fault) {
