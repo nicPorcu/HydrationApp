@@ -52,12 +52,12 @@ public class MyWaterBottlesFragment extends Fragment {
         // Required empty public constructor
     }
 
-//    public static HomepageFragment newInstance(@Nullable String singlePeripheralIdentifier) {
-//        HomepageFragment fragment = new HomepageFragment();
-//        fragment.setArguments(createFragmentArgs(singlePeripheralIdentifier));
-//        singlePeripheralIdentifierMaster = singlePeripheralIdentifier;
-//        return fragment;
-//    }
+    public static MyWaterBottlesFragment newInstance(@Nullable String singlePeripheralIdentifier) {
+        MyWaterBottlesFragment fragment = new MyWaterBottlesFragment();
+        fragment.setArguments(createFragmentArgs(singlePeripheralIdentifier));
+        singlePeripheralIdentifierMaster = singlePeripheralIdentifier;
+        return fragment;
+    }
 
 
     public void areYaSure(int position) {
@@ -72,7 +72,7 @@ public class MyWaterBottlesFragment extends Fragment {
     }
 
     public void deleteItem(int position) {
-        WaterBottle b = waterBottleList.remove(position);
+        WaterBottle b= waterBottleList.remove(position);
         adapter.notifyDataSetChanged();
         Backendless.Persistence.of( WaterBottle.class ).remove( b,
                 new AsyncCallback<Long>()
@@ -135,15 +135,16 @@ public class MyWaterBottlesFragment extends Fragment {
 
     private void wireWidgets() {
         waterBottleList = new ArrayList<>();
-        requestCode = 0;
+        requestCode=0;
         recyclerView = rootView.findViewById(R.id.water_bottle_recycler_view);
-        addButton = rootView.findViewById(R.id.add_button);
+        addButton=rootView.findViewById(R.id.add_button);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(getContext(), BottleEditorActivity.class);
                 intent.putExtra("editMode", true);
                 intent.putExtra("waterBottle", new WaterBottle());
+                intent.putExtra("singlePeripheralIdentifier", singlePeripheralIdentifierMaster);
                 startActivityForResult(intent, requestCode);
 
             }

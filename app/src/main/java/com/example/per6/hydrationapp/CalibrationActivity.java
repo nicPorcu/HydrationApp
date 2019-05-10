@@ -1,5 +1,6 @@
 package com.example.per6.hydrationapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -14,17 +15,20 @@ public class CalibrationActivity extends AppCompatActivity {
     private TextView instructions;
     private int[] measurements;
     private int mesurementNumber;
+    private WaterBottle waterBottle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calibration);
+        Intent i= getIntent();
+        waterBottle= i.getParcelableExtra("waterBottle");
         wireWidgets();
 
     }
 
     private void wireWidgets() {
-        fullBottle=40; //todo update
+        fullBottle=24; //todo update
         mesurementNumber=0;
         measurements = new int[fullBottle];
         nextButton = findViewById(R.id.nextButton);

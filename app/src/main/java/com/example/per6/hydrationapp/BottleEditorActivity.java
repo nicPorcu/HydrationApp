@@ -3,9 +3,6 @@ package com.example.per6.hydrationapp;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,6 +25,7 @@ public class BottleEditorActivity extends AppCompatActivity {
     private Button editButton,calibrateButton, submitButton;
     private Boolean editMode;
     private WaterBottle waterBottle;
+    private static String singlePeripheralIdentifier;
     private Context context;
 
 
@@ -37,7 +35,8 @@ public class BottleEditorActivity extends AppCompatActivity {
         setContentView(R.layout.activity_bottle_editor);
         Intent i=getIntent();
         editMode = i.getBooleanExtra("editMode", false);
-        waterBottle =  i.getParcelableExtra("waterBottle");
+        waterBottle=  i.getParcelableExtra("waterBottle");
+        singlePeripheralIdentifier= i.getStringExtra("singlePeripheralIdentifier");
         wireWidgets();
         setOnClickListeners();
         setEditMode();
@@ -49,11 +48,11 @@ public class BottleEditorActivity extends AppCompatActivity {
 
     private void wireWidgets() {
         context = this;
-        waterBottleName = findViewById(R.id.water_bottle_name);
-        waterBottleCapacity = findViewById(R.id.capacity_edittext);
-        editButton = findViewById(R.id.edit);
-        calibrateButton = findViewById(R.id.calibrate);
-        submitButton = findViewById(R.id.submit);
+        waterBottleName=findViewById(R.id.water_bottle_name);
+        waterBottleCapacity=findViewById(R.id.capacity_edittext);
+        editButton=findViewById(R.id.edit);
+        calibrateButton=findViewById(R.id.calibrate);
+        submitButton=findViewById(R.id.submit);
 
         if(!(waterBottle.getBottleName()==null)) {
             waterBottleName.setText(waterBottle.getBottleName());
@@ -69,7 +68,7 @@ public class BottleEditorActivity extends AppCompatActivity {
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editMode = true;
+                editMode=true;
                 setEditMode();
 
             }
@@ -77,7 +76,10 @@ public class BottleEditorActivity extends AppCompatActivity {
         calibrateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                waterBottle.setBottleName(waterBottleName.getText().toString());
+                waterBottle.setCapacity(Integer.parseInt(waterBottleCapacity.getText().toString()));
                 Intent i = new Intent(context, CalibrationActivity.class);
+                i.putExtra("waterBottle", waterBottle);
                 startActivity(i);
             }
         });
@@ -97,7 +99,7 @@ public class BottleEditorActivity extends AppCompatActivity {
         waterBottle.setBottleName(waterBottleName.getText().toString());
         waterBottle.setCapacity(Integer.parseInt(waterBottleCapacity.getText().toString()));
 
-        List<BottleFillDataPoint> bottleFillValues = new ArrayList<>();
+        List<BottleFillDataPoint> bottleFillValues=new ArrayList<>();
         bottleFillValues.add(new BottleFillDataPoint(1.2));
         bottleFillValues.add(new BottleFillDataPoint(5));
         waterBottle.setBottleFillDataPoints(bottleFillValues);
@@ -135,7 +137,7 @@ public class BottleEditorActivity extends AppCompatActivity {
     private void saveBottle(List<BottleFillDataPoint> bottleFillValues) {
         Backendless.Persistence.save(waterBottle, new AsyncCallback<WaterBottle>() {
             public void handleResponse(WaterBottle response) {
-                Toast.makeText(bottleEditorActivity.this, "yay", Toast.LENGTH_SHORT).show();
+                Toast.makeText(BottleEditorActivity.this, "yay", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "handleResponse: bottle saved"+ response.getBottleName());
                 saveDataPoints(bottleFillValues);
             }
