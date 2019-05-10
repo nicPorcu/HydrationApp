@@ -1,9 +1,7 @@
 package com.example.per6.hydrationapp;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -26,8 +24,6 @@ import com.backendless.persistence.DataQueryBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.app.Activity.RESULT_OK;
 
 
 
@@ -63,7 +59,7 @@ public class MyWaterBottlesFragment extends Fragment {
     }
 
     public void deleteItem(int position) {
-        WaterBottle b= waterBottleList.remove(position);
+        WaterBottle b = waterBottleList.remove(position);
         adapter.notifyDataSetChanged();
         Backendless.Persistence.of( WaterBottle.class ).remove( b,
                 new AsyncCallback<Long>()
@@ -126,13 +122,13 @@ public class MyWaterBottlesFragment extends Fragment {
 
     private void wireWidgets() {
         waterBottleList = new ArrayList<>();
-        requestCode=0;
+        requestCode = 0;
         recyclerView = rootView.findViewById(R.id.water_bottle_recycler_view);
-        addButton=rootView.findViewById(R.id.add_button);
+        addButton = rootView.findViewById(R.id.add_button);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(getContext(), bottleEditorActivity.class);
+                Intent intent=new Intent(getContext(), BottleEditorActivity.class);
                 intent.putExtra("editMode", true);
                 intent.putExtra("waterBottle", new WaterBottle());
                 startActivityForResult(intent, requestCode);
@@ -143,7 +139,7 @@ public class MyWaterBottlesFragment extends Fragment {
         click = new RecyclerViewOnClick() {
             @Override
             public void onClick(View v, int pos) {
-                Intent intent=new Intent(getContext(), bottleEditorActivity.class);
+                Intent intent=new Intent(getContext(), BottleEditorActivity.class);
                 intent.putExtra("editMode", false);
                 intent.putExtra("waterBottle", waterBottleList.get(pos));
                 startActivityForResult(intent,requestCode);
@@ -151,11 +147,11 @@ public class MyWaterBottlesFragment extends Fragment {
 
         };
         layoutManager = new LinearLayoutManager(getContext());
-        adapter=new WaterBottleAdapter( waterBottleList, getContext(), click);
+        adapter = new WaterBottleAdapter( waterBottleList, getContext(), click);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
-        ItemTouchHelper itemTouchHelper=new ItemTouchHelper(new SwipeToDeleteCallback(adapter, this));
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallback(adapter, this));
         itemTouchHelper.attachToRecyclerView(recyclerView);
         registerForContextMenu(recyclerView);
     }
@@ -165,7 +161,7 @@ public class MyWaterBottlesFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(TAG, "onActivityResult: "+"activity result");
-        if(this.requestCode==requestCode && resultCode==Activity.RESULT_OK){
+        if(this.requestCode == requestCode && resultCode == Activity.RESULT_OK){
             getBottles();
 
         }

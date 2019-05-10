@@ -2,8 +2,6 @@ package com.example.per6.hydrationapp;
 
 
 import android.Manifest;
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -16,7 +14,6 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -27,48 +24,31 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
-import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.RotateAnimation;
 import android.widget.Button;
 
 
 import com.example.per6.hydrationapp.ble.BleManager;
 import com.example.per6.hydrationapp.ble.BlePeripheral;
 import com.example.per6.hydrationapp.ble.BleUtils;
+import com.example.per6.hydrationapp.ble.ScannerViewModel;
 import com.example.per6.hydrationapp.style.StyledSnackBar;
 import com.example.per6.hydrationapp.utils.DialogUtils;
 
 import java.util.List;
-import java.util.Locale;
 
 import no.nordicsemi.android.support.v18.scanner.ScanRecord;
-
-import static android.content.Context.CLIPBOARD_SERVICE;
-import static android.content.Context.MODE_PRIVATE;
 
 public class BluetoothActivity extends AppCompatActivity implements ScannerStatusFragmentDialog.onScannerStatusCancelListener {
     private static final String TAG = "BluetoothActivity";
@@ -229,27 +209,24 @@ public class BluetoothActivity extends AppCompatActivity implements ScannerStatu
             });
 
             skip = findViewById(R.id.skipButton);
-            skip.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Log.d(TAG, "onClick: click");
+            skip.setOnClickListener(view -> {
+                Log.d(TAG, "onClick: click");
 
-                    AlertDialog.Builder builder=new AlertDialog.Builder(BluetoothActivity.this);
-                    builder.setMessage("Are You Sure?");
-                    builder.setPositiveButton(R.string.yes, (dialog, which) -> {
-                        Intent returnIntent = new Intent();
-                        returnIntent.putExtra("peripheralIdentifier", "");
-                        setResult(Activity.RESULT_OK, returnIntent);
-                        finish();
-                    });
-                    builder.setNegativeButton(R.string.no, (dialog, which) -> {
-                    });
-                    builder.create().show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(BluetoothActivity.this);
+                builder.setMessage("Are You Sure?\nSkipping connecting will limit functionality of the app");
+                builder.setPositiveButton(R.string.yes, (dialog, which) -> {
+                    Intent returnIntent = new Intent();
+                    returnIntent.putExtra("peripheralIdentifier", "");
+                    setResult(Activity.RESULT_OK, returnIntent);
+                    finish();
+                });
+                builder.setNegativeButton(R.string.no, (dialog, which) -> {
+                });
+                builder.create().show();
 
 
 
 
-                }
             });
         }
     }

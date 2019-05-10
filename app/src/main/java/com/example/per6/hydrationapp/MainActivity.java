@@ -18,6 +18,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+
+import com.example.per6.hydrationapp.LeaderboardFragment.LeaderboardFragment;
 import com.example.per6.hydrationapp.ble.BlePeripheral;
 
 
@@ -87,19 +89,19 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-            currentFragment=new HomepageFragment();
+            currentFragment = new HomepageFragment();
 
         } else if (id == R.id.nav_leaderboard) {
-            currentFragment=new leaderboardFragment();
+            currentFragment = new LeaderboardFragment();
 
         } else if (id == R.id.nav_myInfo) {
-            currentFragment=new MyWaterBottlesFragment();
+            currentFragment = new MyWaterBottlesFragment();
 
         } else if (id == R.id.nav_customization) {
-            currentFragment=new CustomizationFragment();
+            currentFragment = new CustomizationFragment();
 
         } else if (id == R.id.nav_settings) {
-            currentFragment=new SettingsFragment();
+            currentFragment = new SettingsFragment();
 
         }
         if(currentFragment != null){
@@ -146,16 +148,15 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode== bluetoothActivityRequestCode){
-            if(resultCode==RESULT_OK) {
+        if(requestCode == bluetoothActivityRequestCode){
+            if(resultCode == RESULT_OK) {
                 String peripheralIdentifier=data.getStringExtra("peripheralIdentifier");
 
                 if(peripheralIdentifier.equals("")){
-                    isConnectedToBluetooth=false;
+                    isConnectedToBluetooth = false;
                 }else{
-                    isConnectedToBluetooth=true;
+                    isConnectedToBluetooth = true;
                 }
-
                 HomepageFragment fragment = HomepageFragment.newInstance(peripheralIdentifier);
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 if (fragmentManager != null) {

@@ -1,13 +1,10 @@
 package com.example.per6.hydrationapp;
 
 import android.content.Context;
-import android.os.ParcelUuid;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
-import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

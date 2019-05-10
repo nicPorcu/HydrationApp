@@ -528,5 +528,11 @@
     <string name="string_home">Home</string>
     <string name="string_bottle_info">My Waterbottles</string>
     <string name="password">Password</string>
+    <string name="edit">Edit</string>
+    <string name="calibrate">Calibrate</string>
+    <string name="submit">Submit</string>
+    <string name="capacity_in_ounces">Capacity (in ounces)</string>
+    <string name="name">Name</string>
+    <string name="title_activity_calibration">Calibration</string>
 
 </resources>

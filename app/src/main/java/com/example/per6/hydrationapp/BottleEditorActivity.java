@@ -1,7 +1,11 @@
 package com.example.per6.hydrationapp;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,13 +21,14 @@ import com.backendless.exceptions.BackendlessFault;
 import java.util.ArrayList;
 import java.util.List;
 
-public class bottleEditorActivity extends AppCompatActivity {
+public class BottleEditorActivity extends AppCompatActivity {
 
     private static final String TAG = "BottleEditorActivity";
     private EditText waterBottleName, waterBottleCapacity;
     private Button editButton,calibrateButton, submitButton;
     private Boolean editMode;
     private WaterBottle waterBottle;
+    private Context context;
 
 
     @Override
@@ -32,7 +37,7 @@ public class bottleEditorActivity extends AppCompatActivity {
         setContentView(R.layout.activity_bottle_editor);
         Intent i=getIntent();
         editMode = i.getBooleanExtra("editMode", false);
-        waterBottle=  i.getParcelableExtra("waterBottle");
+        waterBottle =  i.getParcelableExtra("waterBottle");
         wireWidgets();
         setOnClickListeners();
         setEditMode();
@@ -43,11 +48,12 @@ public class bottleEditorActivity extends AppCompatActivity {
 
 
     private void wireWidgets() {
-        waterBottleName=findViewById(R.id.water_bottle_name);
-        waterBottleCapacity=findViewById(R.id.capacity_edittext);
-        editButton=findViewById(R.id.edit);
-        calibrateButton=findViewById(R.id.calibrate);
-        submitButton=findViewById(R.id.submit);
+        context = this;
+        waterBottleName = findViewById(R.id.water_bottle_name);
+        waterBottleCapacity = findViewById(R.id.capacity_edittext);
+        editButton = findViewById(R.id.edit);
+        calibrateButton = findViewById(R.id.calibrate);
+        submitButton = findViewById(R.id.submit);
 
         if(!(waterBottle.getBottleName()==null)) {
             waterBottleName.setText(waterBottle.getBottleName());
@@ -63,7 +69,7 @@ public class bottleEditorActivity extends AppCompatActivity {
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editMode=true;
+                editMode = true;
                 setEditMode();
 
             }
@@ -71,7 +77,8 @@ public class bottleEditorActivity extends AppCompatActivity {
         calibrateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent i = new Intent(context, CalibrationActivity.class);
+                startActivity(i);
             }
         });
         submitButton.setOnClickListener(new View.OnClickListener() {
@@ -90,7 +97,7 @@ public class bottleEditorActivity extends AppCompatActivity {
         waterBottle.setBottleName(waterBottleName.getText().toString());
         waterBottle.setCapacity(Integer.parseInt(waterBottleCapacity.getText().toString()));
 
-        List<BottleFillDataPoint> bottleFillValues=new ArrayList<>();
+        List<BottleFillDataPoint> bottleFillValues = new ArrayList<>();
         bottleFillValues.add(new BottleFillDataPoint(1.2));
         bottleFillValues.add(new BottleFillDataPoint(1.2));
         waterBottle.setBottleFillValue(bottleFillValues);
@@ -104,6 +111,7 @@ public class bottleEditorActivity extends AppCompatActivity {
         List<BottleFillDataPoint> responseList= new ArrayList<>();
 
         for(BottleFillDataPoint t:bottleFillValues) {
+
             Backendless.Persistence.save(t, new AsyncCallback<BottleFillDataPoint>() {
                 @Override
                 public void handleResponse(BottleFillDataPoint response) {
@@ -123,7 +131,7 @@ public class bottleEditorActivity extends AppCompatActivity {
     private void saveBottle(List<BottleFillDataPoint> bottleFillValues) {
         Backendless.Persistence.save(waterBottle, new AsyncCallback<WaterBottle>() {
             public void handleResponse(WaterBottle response) {
-                Toast.makeText(bottleEditorActivity.this, "yay", Toast.LENGTH_SHORT).show();
+                Toast.makeText(BottleEditorActivity.this, "yay", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "handleResponse: bottle saved"+ response.getBottleName());
                 setChildren(bottleFillValues);
             }

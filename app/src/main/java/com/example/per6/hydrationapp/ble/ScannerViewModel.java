@@ -1,4 +1,4 @@
-package com.example.per6.hydrationapp;
+package com.example.per6.hydrationapp.ble;
 import android.app.Application;
 import android.arch.core.util.Function;
 import android.arch.lifecycle.AndroidViewModel;
@@ -20,8 +20,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import com.example.per6.hydrationapp.ble.BlePeripheral;
-import com.example.per6.hydrationapp.ble.BleScanner;
+
+import com.example.per6.hydrationapp.R;
 import com.example.per6.hydrationapp.utils.LocalizationManager;
 import com.example.per6.hydrationapp.utils.SingleLiveEvent;
 

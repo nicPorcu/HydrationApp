@@ -21,6 +21,7 @@ import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
+import com.example.per6.hydrationapp.LeaderboardFragment.LeaderboardFragment;
 
 
 public class HydrationApp extends AppCompatActivity
@@ -191,7 +192,7 @@ public class HydrationApp extends AppCompatActivity
             currentFragment=new HomepageFragment();
 
         } else if (id == R.id.nav_leaderboard) {
-            currentFragment=new leaderboardFragment();
+            currentFragment=new LeaderboardFragment();
 
         } else if (id == R.id.nav_myInfo) {
             currentFragment=new MyWaterBottlesFragment();

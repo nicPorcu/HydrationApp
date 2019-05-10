@@ -1,4 +1,6 @@
-package com.example.per6.hydrationapp;
+package com.example.per6.hydrationapp.LeaderboardFragment;
+
+import com.example.per6.hydrationapp.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,7 +13,7 @@ import java.util.Map;
  * <p>
  * TODO: Replace all uses of this class before publishing your app.
  */
-public class leaderboardDisplayerContent {
+public class LeaderboardDisplayerContent {
 
     /**
      * An array of sample (dummy) items.
