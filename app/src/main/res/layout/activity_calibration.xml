@@ -22,7 +22,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/ic_navigate_next_black_24dp"
-        android:focusable="true" />
+        android:focusable="true"/>
 
     <TextView
         android:id="@+id/instruction"

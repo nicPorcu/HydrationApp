@@ -534,5 +534,6 @@
     <string name="capacity_in_ounces">Capacity (in ounces)</string>
     <string name="name">Name</string>
     <string name="title_activity_calibration">Calibration</string>
+    <string name="getSinglePeripheralIdentifier">singlePeripheralIdentifier</string>
 
 </resources>

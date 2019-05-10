@@ -51,7 +51,6 @@ public class UartPacketManagerBase implements BlePeripheralUart.UartRxHandler {
         }
 
         final UartPacket uartPacket = new UartPacket(identifier, UartPacket.TRANSFERMODE_RX, data);
-        Log.d(TAG, "onRxDataReceived: hi");
 
         try {
             mPacketsSemaphore.acquire();
@@ -73,7 +72,7 @@ public class UartPacketManagerBase implements BlePeripheralUart.UartRxHandler {
                 }
             });
         }
-
+        mReceivedBytes += data.length;
         mPacketsSemaphore.release();
     }
 

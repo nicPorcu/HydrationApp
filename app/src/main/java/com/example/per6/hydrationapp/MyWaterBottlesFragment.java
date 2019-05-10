@@ -141,7 +141,7 @@ public class MyWaterBottlesFragment extends Fragment {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(getContext(), BottleEditorActivity.class);
+                Intent intent = new Intent(getContext(), BottleEditorActivity.class);
                 intent.putExtra("editMode", true);
                 intent.putExtra("waterBottle", new WaterBottle());
                 intent.putExtra("singlePeripheralIdentifier", singlePeripheralIdentifierMaster);
@@ -156,6 +156,7 @@ public class MyWaterBottlesFragment extends Fragment {
                 Intent intent=new Intent(getContext(), BottleEditorActivity.class);
                 intent.putExtra("editMode", false);
                 intent.putExtra("waterBottle", waterBottleList.get(pos));
+                intent.putExtra("singlePeripheralIdentifier", singlePeripheralIdentifierMaster);
                 startActivityForResult(intent,requestCode);
             }
 

@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity
 
     private boolean hasUserAlreadyBeenAskedAboutBluetoothStatus = false;
     private boolean isConnectedToBluetooth;
-
+    private String peripheralIdentifier;
 
 
     @Override
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity
             currentFragment = new LeaderboardFragment();
 
         } else if (id == R.id.nav_myInfo) {
-            currentFragment = new MyWaterBottlesFragment();
+            currentFragment = MyWaterBottlesFragment.newInstance(peripheralIdentifier);
 
         } else if (id == R.id.nav_customization) {
             currentFragment = new CustomizationFragment();
@@ -106,7 +106,8 @@ public class MainActivity extends AppCompatActivity
         }
         if(currentFragment != null){
             fm.beginTransaction()
-                    .replace(R.id.fragment_container, currentFragment)
+                    .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right, R.anim.slide_in_right, R.anim.slide_out_left)
+                    .replace(R.id.fragment_container, currentFragment, "MyWaterBottles")
                     .commit();
         }
 
@@ -150,7 +151,7 @@ public class MainActivity extends AppCompatActivity
 
         if(requestCode == bluetoothActivityRequestCode){
             if(resultCode == RESULT_OK) {
-                String peripheralIdentifier=data.getStringExtra("peripheralIdentifier");
+                peripheralIdentifier = data.getStringExtra("peripheralIdentifier");
 
                 if(peripheralIdentifier.equals("")){
                     isConnectedToBluetooth = false;

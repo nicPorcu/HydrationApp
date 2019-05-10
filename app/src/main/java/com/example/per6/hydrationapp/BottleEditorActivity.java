@@ -25,7 +25,7 @@ public class BottleEditorActivity extends AppCompatActivity {
     private Button editButton,calibrateButton, submitButton;
     private Boolean editMode;
     private WaterBottle waterBottle;
-    private static String singlePeripheralIdentifier;
+    private String singlePeripheralIdentifier;
     private Context context;
 
 
@@ -33,10 +33,10 @@ public class BottleEditorActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bottle_editor);
-        Intent i=getIntent();
+        Intent i = getIntent();
         editMode = i.getBooleanExtra("editMode", false);
-        waterBottle=  i.getParcelableExtra("waterBottle");
-        singlePeripheralIdentifier= i.getStringExtra("singlePeripheralIdentifier");
+        waterBottle =  i.getParcelableExtra("waterBottle");
+        singlePeripheralIdentifier = i.getStringExtra("singlePeripheralIdentifier");
         wireWidgets();
         setOnClickListeners();
         setEditMode();
@@ -48,11 +48,11 @@ public class BottleEditorActivity extends AppCompatActivity {
 
     private void wireWidgets() {
         context = this;
-        waterBottleName=findViewById(R.id.water_bottle_name);
-        waterBottleCapacity=findViewById(R.id.capacity_edittext);
-        editButton=findViewById(R.id.edit);
-        calibrateButton=findViewById(R.id.calibrate);
-        submitButton=findViewById(R.id.submit);
+        waterBottleName = findViewById(R.id.water_bottle_name);
+        waterBottleCapacity = findViewById(R.id.capacity_edittext);
+        editButton = findViewById(R.id.edit);
+        calibrateButton = findViewById(R.id.calibrate);
+        submitButton = findViewById(R.id.submit);
 
         if(!(waterBottle.getBottleName()==null)) {
             waterBottleName.setText(waterBottle.getBottleName());
@@ -80,6 +80,7 @@ public class BottleEditorActivity extends AppCompatActivity {
                 waterBottle.setCapacity(Integer.parseInt(waterBottleCapacity.getText().toString()));
                 Intent i = new Intent(context, CalibrationActivity.class);
                 i.putExtra("waterBottle", waterBottle);
+                i.putExtra("singlePeripheralIdentifier", singlePeripheralIdentifier);
                 startActivity(i);
             }
         });
