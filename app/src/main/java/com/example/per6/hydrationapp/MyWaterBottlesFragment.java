@@ -33,8 +33,7 @@ import static com.example.per6.hydrationapp.ConnectedPeripheralFragment.createFr
 
 
 public class MyWaterBottlesFragment extends Fragment {
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+
     private static final String TAG = "WaterBottlesFragment";
     private static String singlePeripheralIdentifierMaster;
     private WaterBottleAdapter adapter;

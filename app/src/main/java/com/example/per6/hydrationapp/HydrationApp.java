@@ -31,6 +31,7 @@ public class HydrationApp extends AppCompatActivity
     private SharedPreferences.Editor editor;
     private Context context;
     private Fragment currentFragment;
+
     private FragmentManager fm;
 
 

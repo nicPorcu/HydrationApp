@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity
     private FragmentManager fm;
     private static final int bluetoothActivityRequestCode=3;
 
+
     private boolean hasUserAlreadyBeenAskedAboutBluetoothStatus = false;
     private boolean isConnectedToBluetooth;
     private String peripheralIdentifier;

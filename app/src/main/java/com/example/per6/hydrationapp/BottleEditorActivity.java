@@ -36,10 +36,7 @@ public class BottleEditorActivity extends AppCompatActivity {
         setContentView(R.layout.activity_bottle_editor);
         Intent i = getIntent();
         editMode = i.getBooleanExtra("editMode", false);
-        hasBeenCalibrated=false;
-        if(!editMode){
-            hasBeenCalibrated=true;
-        }
+
         waterBottle =  i.getParcelableExtra("waterBottle");
         singlePeripheralIdentifier = i.getStringExtra("singlePeripheralIdentifier");
         wireWidgets();
@@ -91,9 +88,10 @@ public class BottleEditorActivity extends AppCompatActivity {
         });
         submitButton.setOnClickListener(new View.OnClickListener() {
 
-
             @Override
             public void onClick(View v) {
+                waterBottle.setBottleName(waterBottleName.getText().toString());
+                waterBottle.setCapacity(Integer.parseInt(waterBottleCapacity.getText().toString()));
                 checkCalibration();
                 if(hasBeenCalibrated) {
                     backendlessUpdateBottle();
@@ -108,7 +106,8 @@ public class BottleEditorActivity extends AppCompatActivity {
     }
 
     private void checkCalibration() {
-        if(!hasBeenCalibrated || waterBottle.getCapacity()!=waterBottle.getBottleFillDataPoints().size()){
+        if(waterBottle.getCapacity()!=waterBottle.getBottleFillDataPoints().size()){
+            Log.d(TAG, "checkCalibration: "+waterBottle.getBottleFillDataPoints().size());
             hasBeenCalibrated=false;
         }
         else{

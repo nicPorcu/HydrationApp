@@ -11,6 +11,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.backendless.Backendless;
+import com.backendless.BackendlessUser;
+
 import static com.example.per6.hydrationapp.ConnectedPeripheralFragment.createFragmentArgs;
 
 
@@ -24,12 +28,9 @@ import static com.example.per6.hydrationapp.ConnectedPeripheralFragment.createFr
 public class HomepageFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+
+
 
     private static String singlePeripheralIdentifierMaster;
 
@@ -39,6 +40,8 @@ public class HomepageFragment extends Fragment {
     private ProgressBar progressBarWater;
     private TextView textLastSync;
     private double dogLevel;
+    private int dailyWaterGoal;
+    private int currentWaterConsumption;
 
     public HomepageFragment() {
         // Required empty public constructor
@@ -47,12 +50,14 @@ public class HomepageFragment extends Fragment {
         HomepageFragment fragment = new HomepageFragment();
         fragment.setArguments(createFragmentArgs(peripheralIdentifier));
         singlePeripheralIdentifierMaster=peripheralIdentifier;
+
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
     }
 
@@ -61,7 +66,10 @@ public class HomepageFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_homepage, container, false);
+        dailyWaterGoal= (Integer) Backendless.UserService.CurrentUser().getProperty("dailyWaterGoal");
+        currentWaterConsumption=50;//todo change this
         wireWidgets();
+
         //dogChange(0.0);
         //imageDog.setImageResource(R.drawable.ic_menu_camera);
         return rootView;
@@ -71,6 +79,9 @@ public class HomepageFragment extends Fragment {
         imageDog = rootView.findViewById(R.id.imageDog);
         progressBarWater = rootView.findViewById(R.id.progressBarWater);
         textLastSync = rootView.findViewById(R.id.textLastSync);
+        progressBarWater.setMax(dailyWaterGoal);
+        progressBarWater.setProgress(currentWaterConsumption);
+
     }
 
     private void dogChange(double change){
