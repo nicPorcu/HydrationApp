@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -98,7 +97,7 @@ public class MainActivity extends AppCompatActivity
             currentFragment = MyWaterBottlesFragment.newInstance(peripheralIdentifier);
 
         } else if (id == R.id.nav_customization) {
-            currentFragment = new CustomizationFragment();
+            currentFragment = new MyInfoFragment();
 
         } else if (id == R.id.nav_settings) {
             currentFragment = new SettingsFragment();

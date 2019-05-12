@@ -535,5 +535,6 @@
     <string name="name">Name</string>
     <string name="title_activity_calibration">Calibration</string>
     <string name="getSinglePeripheralIdentifier">singlePeripheralIdentifier</string>
+    <string name="water_bottle">WaterBottle</string>
 
 </resources>

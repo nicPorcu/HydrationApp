@@ -1,13 +1,16 @@
 package com.example.per6.hydrationapp;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothGatt;
 import android.content.Intent;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.design.widget.CoordinatorLayout;
+
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -51,7 +54,7 @@ public class CalibrationActivity extends AppCompatActivity implements UartPacket
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calibration);
         Intent i = getIntent();
-        waterBottle = i.getParcelableExtra("waterBottle");
+        waterBottle = i.getParcelableExtra(getString(R.string.water_bottle));
         String singlePeripheralIdentifier = i.getStringExtra("singlePeripheralIdentifier");
         mBlePeripheral = BleScanner.getInstance().getPeripheralWithIdentifier(singlePeripheralIdentifier);
         wireWidgets();
@@ -59,16 +62,19 @@ public class CalibrationActivity extends AppCompatActivity implements UartPacket
     }
 
     private void wireWidgets() {
-        //todo make sure connected, and cancel if bottle disconnects
         context = this;
-        fullBottle = 40; //todo update
+        fullBottle=waterBottle.getCapacity(); //todo update
+        finish=findViewById(R.id.doneButton);
         measurementNumber = 0;
         numberOfRecievedBytes = 0;
+        finish.setVisibility(View.INVISIBLE);
         measurements = new int[fullBottle];
         nextButton = findViewById(R.id.nextButton);
         nextButton.setOnClickListener(view -> {
             if (measurementNumber < fullBottle) {
-                    instructions.setText("Pour 1oz of water into the bottle, screw the lid back on and press next, press done when the water bottle is full");
+                finish.setVisibility(View.INVISIBLE);
+
+                instructions.setText("Pour 1oz of water into the bottle, screw the lid back on and press next, press done when the water bottle is full");
                     if (uartSetup) {
                         send();
                         nextButton.setClickable(false);
@@ -76,14 +82,23 @@ public class CalibrationActivity extends AppCompatActivity implements UartPacket
                         setupUart();
                     }
                 } else {
-                    instructions.setText("Thank you! Now your water bottle is ready for use");
+                finish.setVisibility(View.VISIBLE);
+
+                instructions.setText("Thank you! Now your water bottle is ready for use");
                 }
         });
 
-        finish = findViewById(R.id.doneButton);
         finish.setText("Finish");
-        finish.setOnClickListener((View view2) -> {
-            //todo save in backendless
+        finish.setOnClickListener(view -> {
+            updateBottle();
+            Intent resultIntent= new Intent();
+            Log.d(TAG, "wireWidgets: "+waterBottle.getBottleName());
+            resultIntent.putExtra(getString(R.string.water_bottle), waterBottle);
+
+            //resultIntent.putExtra("bottleFillDataPoints",  waterBottle.getBottleFillDataPoints());
+            setResult(Activity.RESULT_OK, resultIntent);
+            finish();
+
         });
         instructions = findViewById(R.id.instruction);
         instructions.setText("Ready to Calibrate?\n Empty your water bottle and place the Kiwi Companion lid on and turn it on.\n Press next when you have done this");
@@ -92,7 +107,6 @@ public class CalibrationActivity extends AppCompatActivity implements UartPacket
 
     protected void setupUart() {
         mUartData = new UartPacketManager(context, this, true);
-        mUartData.getReceivedBytes();
         // Enable uart
 
         if (!BlePeripheralUart.isUartInitialized(mBlePeripheral, mBlePeripheralsUart)) { // If was not previously setup (i.e. orientation change)
@@ -143,12 +157,23 @@ public class CalibrationActivity extends AppCompatActivity implements UartPacket
     public void onUartPacket(UartPacket packet) {
         byte[] bytes = packet.getData();
         String text = new String(bytes, Charset.forName("UTF-8"));
-        measurements[measurementNumber] = Integer.parseInt(text); //placeholder
-        Log.d(TAG, "onUartPacket: "+measurements[measurementNumber]);
-        measurementNumber++;
+        Log.d(TAG, "onUartPacket: "+text);
+        Log.d(TAG, "onUartPacket: "+ numberOfRecievedBytes+ mUartData.getReceivedBytes());
         if(numberOfRecievedBytes != mUartData.getReceivedBytes()){ //if new data
+            measurements[measurementNumber] = Integer.parseInt(text); //placeholder
+            Log.d(TAG, "onUartPacket: "+measurements[measurementNumber]);
+            Log.d(TAG, "onUartPacket: recieved"+measurementNumber);
+            measurementNumber++;
             nextButton.setClickable(true);
             numberOfRecievedBytes = mUartData.getReceivedBytes();
+        }
+    }
+
+    private void updateBottle() {
+        waterBottle.clearBottleFillDataPoint();
+        for (int measurement:measurements){
+            BottleFillDataPoint newDataPoint=new BottleFillDataPoint(measurement);
+            waterBottle.addBottleFillDataPoint(newDataPoint);
         }
     }
 }

@@ -23,10 +23,11 @@ public class BottleEditorActivity extends AppCompatActivity {
     private static final String TAG = "BottleEditorActivity";
     private EditText waterBottleName, waterBottleCapacity;
     private Button editButton,calibrateButton, submitButton;
-    private Boolean editMode;
+    private Boolean editMode, hasBeenCalibrated;
     private WaterBottle waterBottle;
     private String singlePeripheralIdentifier;
     private Context context;
+    private static final int calibrationActivityRequestCode=23;
 
 
     @Override
@@ -35,6 +36,10 @@ public class BottleEditorActivity extends AppCompatActivity {
         setContentView(R.layout.activity_bottle_editor);
         Intent i = getIntent();
         editMode = i.getBooleanExtra("editMode", false);
+        hasBeenCalibrated=false;
+        if(!editMode){
+            hasBeenCalibrated=true;
+        }
         waterBottle =  i.getParcelableExtra("waterBottle");
         singlePeripheralIdentifier = i.getStringExtra("singlePeripheralIdentifier");
         wireWidgets();
@@ -52,7 +57,7 @@ public class BottleEditorActivity extends AppCompatActivity {
         waterBottleCapacity = findViewById(R.id.capacity_edittext);
         editButton = findViewById(R.id.edit);
         calibrateButton = findViewById(R.id.calibrate);
-        submitButton = findViewById(R.id.submit);
+        submitButton = findViewById(R.id.button_submit);
 
         if(!(waterBottle.getBottleName()==null)) {
             waterBottleName.setText(waterBottle.getBottleName());
@@ -79,38 +84,54 @@ public class BottleEditorActivity extends AppCompatActivity {
                 waterBottle.setBottleName(waterBottleName.getText().toString());
                 waterBottle.setCapacity(Integer.parseInt(waterBottleCapacity.getText().toString()));
                 Intent i = new Intent(context, CalibrationActivity.class);
-                i.putExtra("waterBottle", waterBottle);
+                i.putExtra(getString(R.string.water_bottle), waterBottle);
                 i.putExtra("singlePeripheralIdentifier", singlePeripheralIdentifier);
-                startActivity(i);
+                startActivityForResult(i, calibrationActivityRequestCode);
             }
         });
         submitButton.setOnClickListener(new View.OnClickListener() {
 
+
             @Override
             public void onClick(View v) {
-                backendlessUpdateBottle();
-                Intent resultIntent = new Intent();
-                setResult(Activity.RESULT_OK, resultIntent);
-                finish();
+                checkCalibration();
+                if(hasBeenCalibrated) {
+                    backendlessUpdateBottle();
+                    Intent resultIntent = new Intent();
+                    setResult(Activity.RESULT_OK, resultIntent);
+                    finish();
+                }else {
+                    Toast.makeText(context, "Please Calibrate Water Bottle", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
+
+    private void checkCalibration() {
+        if(!hasBeenCalibrated || waterBottle.getCapacity()!=waterBottle.getBottleFillDataPoints().size()){
+            hasBeenCalibrated=false;
+        }
+        else{
+            hasBeenCalibrated=true;
+        }
+    }
+
+
 
     private void backendlessUpdateBottle() {
         waterBottle.setBottleName(waterBottleName.getText().toString());
         waterBottle.setCapacity(Integer.parseInt(waterBottleCapacity.getText().toString()));
 
-        List<BottleFillDataPoint> bottleFillValues=new ArrayList<>();
-        bottleFillValues.add(new BottleFillDataPoint(1.2));
-        bottleFillValues.add(new BottleFillDataPoint(5));
-        waterBottle.setBottleFillDataPoints(bottleFillValues);
-        saveBottle(bottleFillValues);
+
+        saveBottle();
 
 
 
     }
 
-    private void saveDataPoints(List<BottleFillDataPoint> bottleFillValues) {
+    private void saveDataPoints() {
+        List<BottleFillDataPoint> bottleFillValues=waterBottle.getBottleFillDataPoints();
+
         List<BottleFillDataPoint> responseList= new ArrayList<>();
 
         final int bottleFillValuesSize= bottleFillValues.size();
@@ -135,12 +156,12 @@ public class BottleEditorActivity extends AppCompatActivity {
         }
     }
 
-    private void saveBottle(List<BottleFillDataPoint> bottleFillValues) {
+    private void saveBottle() {
         Backendless.Persistence.save(waterBottle, new AsyncCallback<WaterBottle>() {
             public void handleResponse(WaterBottle response) {
                 Toast.makeText(BottleEditorActivity.this, "yay", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "handleResponse: bottle saved"+ response.getBottleName());
-                saveDataPoints(bottleFillValues);
+                saveDataPoints();
             }
 
             public void handleFault(BackendlessFault fault) {
@@ -152,7 +173,7 @@ public class BottleEditorActivity extends AppCompatActivity {
     }
 
     private void setChildren(List<BottleFillDataPoint> bottleFillValues) {
-        Backendless.Data.of( WaterBottle.class ).setRelation( waterBottle, "bottleFillDataPoints", bottleFillValues,
+        Backendless.Data.of( WaterBottle.class ).setRelation( waterBottle, "bottleFillDataPoints", waterBottle.getBottleFillDataPoints(),
                 new AsyncCallback<Integer>()
                 {
                     @Override
@@ -192,5 +213,20 @@ public class BottleEditorActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode==RESULT_OK){
+            if(requestCode==calibrationActivityRequestCode){
+                hasBeenCalibrated=true;
+                waterBottle=data.getParcelableExtra(getString(R.string.water_bottle));
+                Log.d(TAG, "onActivityResult: bottleName"+ waterBottle.getBottleName());
+                Log.d(TAG, "onActivityResult: calibrateActivity");
+                Log.d(TAG, "onActivityResult: "+waterBottle.getBottleFillDataPoints().size());
 
+                backendlessUpdateBottle();
+            }
+        }
+
+    }
 }

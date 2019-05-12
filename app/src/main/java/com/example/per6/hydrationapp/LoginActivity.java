@@ -68,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
                         editor.putString("userUserName", username);
                         editor.putString( getString(R.string.password), password);
                         editor.putInt(getString(R.string.user), 1);
-                        editor.commit();
+                        editor.apply();
                         String check = sharedPref.getString("userUserName", null);
                         Log.d(TAG, "handleResponse: "+check);
                         //start main activity

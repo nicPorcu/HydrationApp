@@ -198,7 +198,7 @@ public class HydrationApp extends AppCompatActivity
             currentFragment=new MyWaterBottlesFragment();
 
         } else if (id == R.id.nav_customization) {
-            currentFragment=new CustomizationFragment();
+            currentFragment=new MyInfoFragment();
 
         } else if (id == R.id.nav_settings) {
             currentFragment=new SettingsFragment();

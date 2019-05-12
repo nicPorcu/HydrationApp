@@ -153,11 +153,14 @@ public class MyWaterBottlesFragment extends Fragment {
         click = new RecyclerViewOnClick() {
             @Override
             public void onClick(View v, int pos) {
+                Log.d(TAG, "onClick: made it to 1");
                 Intent intent=new Intent(getContext(), BottleEditorActivity.class);
                 intent.putExtra("editMode", false);
                 intent.putExtra("waterBottle", waterBottleList.get(pos));
                 intent.putExtra("singlePeripheralIdentifier", singlePeripheralIdentifierMaster);
                 startActivityForResult(intent,requestCode);
+                Log.d(TAG, "onClick: made it to 2");
+
             }
 
         };

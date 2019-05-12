@@ -60,6 +60,7 @@ dependencies {
     implementation 'android.arch.lifecycle:extensions:1.1.1'
     // compile "android.arch.lifecycle:compiler:1.0.0-rc1"
     implementation 'android.arch.lifecycle:common-java8:1.1.1'
+    implementation 'org.jetbrains:annotations:15.0'
 }
 
 

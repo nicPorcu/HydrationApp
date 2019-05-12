@@ -45,6 +45,9 @@ public class UartPacketManagerBase implements BlePeripheralUart.UartRxHandler {
 
     @Override
     public void onRxDataReceived(@NonNull byte[] data, @Nullable String identifier, int status) {
+
+        Log.d(TAG, "onRxDataReceived: data recieved");
+        
         if (status != BluetoothGatt.GATT_SUCCESS) {
             Log.w(TAG, "onRxDataReceived error:" + status);
             return;
@@ -72,7 +75,17 @@ public class UartPacketManagerBase implements BlePeripheralUart.UartRxHandler {
                 }
             });
         }
-        mReceivedBytes += data.length;
+        Log.d(TAG, "onRxDataReceived: data 0" +data[0]);
+        Log.d(TAG, "onRxDataReceived: data 1" +data[1]);
+        Log.d(TAG, "onRxDataReceived: data 2" +data[2]);
+        if (data.length>3) {
+            Log.d(TAG, "onRxDataReceived: data 3" + data[3]);
+            Log.d(TAG, "onRxDataReceived: data 4" + data[4]);
+            Log.d(TAG, "onRxDataReceived: data 5" + data[5]);
+        }
+
+
+        //mReceivedBytes += data.length;
         mPacketsSemaphore.release();
     }
 

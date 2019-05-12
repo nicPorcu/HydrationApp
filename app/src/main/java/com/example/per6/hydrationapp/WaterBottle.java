@@ -19,6 +19,7 @@ public class WaterBottle implements Parcelable {
     }
 
     public WaterBottle() {
+        bottleFillDataPoints=new ArrayList<>();
     }
 
     public String getBottleName() {
@@ -51,20 +52,24 @@ public class WaterBottle implements Parcelable {
     public String getObjectId() {
         return objectId;
     }
-
     public void setObjectId(String objectId) {
         this.objectId = objectId;
     }
 
+    public void addBottleFillDataPoint(BottleFillDataPoint bottleFillDataPoint){
+        bottleFillDataPoints.add(bottleFillDataPoint);
+    }
 
 
-
+    public void clearBottleFillDataPoint(){
+        bottleFillDataPoints.clear();
+    }
 
     protected WaterBottle(Parcel in) {
         bottleName = in.readString();
         if (in.readByte() == 0x01) {
             bottleFillDataPoints = new ArrayList<BottleFillDataPoint>();
-            in.readList(bottleFillDataPoints, Double.class.getClassLoader());
+            in.readList(bottleFillDataPoints, BottleFillDataPoint.class.getClassLoader());
         } else {
             bottleFillDataPoints = null;
         }
