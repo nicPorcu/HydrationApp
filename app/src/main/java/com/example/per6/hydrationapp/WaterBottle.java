@@ -38,9 +38,6 @@ public class WaterBottle implements Parcelable {
         this.bottleFillDataPoints = bottleFillValues;
     }
 
-
-
-
     public int getCapacity() {
         return capacity;
     }
