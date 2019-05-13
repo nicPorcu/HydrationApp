@@ -13,6 +13,7 @@ public class WaterBottle implements Parcelable {
     private int capacity;
     private String objectId;
 
+
     public WaterBottle(String bottleName, List<BottleFillDataPoint> bottleFillValues) {
         this.bottleName = bottleName;
         this.bottleFillDataPoints = bottleFillValues;
@@ -107,4 +108,6 @@ public class WaterBottle implements Parcelable {
             return new WaterBottle[size];
         }
     };
+
+
 }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">Hydration App</string>
+    <string name="app_name" translatable="false">Kiwi Hydration</string>
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
     <string name="nav_header_title" translatable="false">Android Studio</string>
@@ -526,7 +526,7 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="string_home">Home</string>
-    <string name="string_bottle_info">My Waterbottles</string>
+    <string name="string_bottle_info">My Water Bottles</string>
     <string name="password">Password</string>
     <string name="edit">Edit</string>
     <string name="calibrate">Calibrate</string>
@@ -536,5 +536,8 @@
     <string name="title_activity_calibration">Calibration</string>
     <string name="getSinglePeripheralIdentifier">singlePeripheralIdentifier</string>
     <string name="water_bottle">WaterBottle</string>
+    <string name="my_info">My Info</string>
+    <string name="channel_name">TheChannel</string>
+    <string name="channel_description">It is the channel</string>
 
 </resources>
