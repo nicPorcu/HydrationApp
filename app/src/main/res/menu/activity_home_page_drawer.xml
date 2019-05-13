@@ -15,7 +15,7 @@
             android:title="@string/string_bottle_info" />
         <item
             android:id="@+id/nav_customization"
-            android:title="@string/string_customization" />
+            android:title="@string/my_info" />
         <item
             android:id="@+id/nav_settings"
             android:title="@string/string_settings" />

@@ -4,4 +4,6 @@ import android.view.View;
 
 interface RecyclerViewOnClick {
     void onClick(View v, int pos);
+
+    void setCurrentBottle(View v, int pos);
 }

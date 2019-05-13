@@ -162,6 +162,14 @@ public class MyWaterBottlesFragment extends Fragment {
 
             }
 
+            @Override
+            public void setCurrentBottle(View v, int pos) {
+
+                WaterBottle w= waterBottleList.get(pos);
+                Backendless.UserService.CurrentUser().setProperty("currentWaterBottle",w );
+            }
+
+
         };
         layoutManager = new LinearLayoutManager(getContext());
         adapter = new WaterBottleAdapter( waterBottleList, getContext(), click);

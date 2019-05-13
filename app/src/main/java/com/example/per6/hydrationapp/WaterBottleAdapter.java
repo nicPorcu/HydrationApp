@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class WaterBottleAdapter extends RecyclerView.Adapter<WaterBottleAdapter.
     public static final String TAG= "WaterBottleAdapter";
     private WaterBottle mRecentlyDeletedItem;
     private int mRecentlyDeletedItemPosition;
+
 
 
 
@@ -80,6 +82,7 @@ public class WaterBottleAdapter extends RecyclerView.Adapter<WaterBottleAdapter.
 
         private TextView mNameView;
         private TextView mCapacityView;
+        private CheckBox isCurrentBottleCheckbox;
 
 
 
@@ -90,7 +93,9 @@ public class WaterBottleAdapter extends RecyclerView.Adapter<WaterBottleAdapter.
             mNameView = (TextView) view.findViewById(R.id.water_bottle_name);
             mCapacityView= view.findViewById(R.id.bottle_capacity);
             recyclerViewOnClick=click;
+            isCurrentBottleCheckbox.setOnClickListener(this);
             itemView.setOnClickListener(this);
+
         }
 
         @Override
@@ -100,7 +105,16 @@ public class WaterBottleAdapter extends RecyclerView.Adapter<WaterBottleAdapter.
 
         @Override
         public void onClick(View v) {
-                recyclerViewOnClick.onClick(v, getAdapterPosition());
+
+                if  (v.getId()==R.id.is_current_bottle_checkbox){
+                        recyclerViewOnClick.setCurrentBottle(v, getAdapterPosition());
+
+                }else{
+                    recyclerViewOnClick.onClick(v, getAdapterPosition());
+
+                }
+
+
         }
     }
 }
