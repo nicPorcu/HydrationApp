@@ -23,7 +23,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button submitButton;
     private EditText usernameEdittext, passwordEdittext;
     private SharedPreferences sharedPref;
-    private TextView googleSigninTextview;
+    private TextView createAccountTextView;
     private Context context;
 
 
@@ -42,11 +42,15 @@ public class LoginActivity extends AppCompatActivity {
         submitButton=(Button)findViewById(R.id.button_submit);
         usernameEdittext=(EditText) findViewById(R.id.login_edittext_username);
         passwordEdittext=(EditText) findViewById(R.id.login_edittext_password);
-        googleSigninTextview=(TextView) findViewById(R.id.textview_google_signin);
-        googleSigninTextview.setOnClickListener(new View.OnClickListener() {
+        createAccountTextView =(TextView) findViewById(R.id.textview_create_account);
+        createAccountTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //googleSignIn();
+                Intent i=new Intent(context, SetupActivity.class);
+                startActivity(i);
+                finish();
+
+
             }
         });
         submitButton.setOnClickListener(new View.OnClickListener() {
@@ -90,10 +94,5 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-//    public void googleSignIn(){
-//        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-//                .requestEmail()
-//                .build();
-//
-//    }
+
 }

@@ -12,12 +12,17 @@ public class WaterBottle implements Parcelable {
     private List<BottleFillDataPoint> bottleFillDataPoints;
     private int capacity;
     private String objectId;
+    private String ownerId;
 
-
-    public WaterBottle(String bottleName, List<BottleFillDataPoint> bottleFillValues) {
+    public WaterBottle(String bottleName, List<BottleFillDataPoint> bottleFillDataPoints, int capacity, String objectId, String ownerId) {
         this.bottleName = bottleName;
-        this.bottleFillDataPoints = bottleFillValues;
+        this.bottleFillDataPoints = bottleFillDataPoints;
+        this.capacity = capacity;
+        this.objectId = objectId;
+        this.ownerId = ownerId;
     }
+
+
 
     public WaterBottle() {
         bottleFillDataPoints=new ArrayList<>();
@@ -40,7 +45,13 @@ public class WaterBottle implements Parcelable {
     }
 
 
+    public String getOwnerId() {
+        return ownerId;
+    }
 
+    public void setOwnerId(String ownerId) {
+        this.ownerId = ownerId;
+    }
 
     public int getCapacity() {
         return capacity;
@@ -66,6 +77,10 @@ public class WaterBottle implements Parcelable {
         bottleFillDataPoints.clear();
     }
 
+
+
+
+
     protected WaterBottle(Parcel in) {
         bottleName = in.readString();
         if (in.readByte() == 0x01) {
@@ -76,6 +91,7 @@ public class WaterBottle implements Parcelable {
         }
         capacity = in.readInt();
         objectId = in.readString();
+        ownerId = in.readString();
     }
 
     @Override
@@ -94,6 +110,7 @@ public class WaterBottle implements Parcelable {
         }
         dest.writeInt(capacity);
         dest.writeString(objectId);
+        dest.writeString(ownerId);
     }
 
     @SuppressWarnings("unused")
@@ -108,6 +125,4 @@ public class WaterBottle implements Parcelable {
             return new WaterBottle[size];
         }
     };
-
-
 }
