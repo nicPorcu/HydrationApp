@@ -45,6 +45,7 @@ public class CalibrationActivity extends AppCompatActivity implements UartPacket
     private int measurementNumber;
     private Context context;
     private WaterBottle waterBottle;
+    private TextView progressTextview;
     private UartPacketManagerBase mUartData;
     private List<BlePeripheralUart> mBlePeripheralsUart = new ArrayList<>();
     private BlePeripheral mBlePeripheral;
@@ -99,6 +100,7 @@ public class CalibrationActivity extends AppCompatActivity implements UartPacket
         });
 
         finish = findViewById(R.id.doneButton);
+        progressTextview=findViewById(R.id.progress_textview);
         finish.setVisibility(View.INVISIBLE);
         finish.setText("Finish");
         finish.setOnClickListener(view -> {
@@ -202,6 +204,7 @@ public class CalibrationActivity extends AppCompatActivity implements UartPacket
 
             getingData.setVisibility(View.GONE);
             measurementNumber++;
+            progressTextview.setText("You have measured "+measurementNumber+ "oz");
             nextButton.setClickable(true);
             numberOfRecievedBytes = mUartData.getReceivedBytes();
         }

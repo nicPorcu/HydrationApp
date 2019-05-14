@@ -34,7 +34,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.usernameView.setText((String)users.get(position).getProperty("name"));
-        holder.daysLoggedView.setText(""+(Integer)users.get(position).getProperty("daysLogged"));
+        holder.daysLoggedView.setText((Integer)users.get(position).getProperty("daysLogged")+" day streak");
 
 
     }

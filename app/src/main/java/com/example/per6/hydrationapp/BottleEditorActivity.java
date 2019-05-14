@@ -78,6 +78,7 @@ public class BottleEditorActivity extends AppCompatActivity {
         calibrateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 waterBottle.setBottleName(waterBottleName.getText().toString());
                 waterBottle.setCapacity(Integer.parseInt(waterBottleCapacity.getText().toString()));
                 Intent i = new Intent(context, CalibrationActivity.class);
