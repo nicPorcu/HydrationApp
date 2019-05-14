@@ -87,7 +87,6 @@ public class BluetoothActivity extends AppCompatActivity implements ScannerStatu
 
         context = this;
 
-
         fm = getSupportFragmentManager();
         onActivityCreatedStuff();
         onViewCreatedStuff();
