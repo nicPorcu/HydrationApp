@@ -100,7 +100,7 @@ public class CalibrationActivity extends AppCompatActivity implements UartPacket
         });
 
         finish = findViewById(R.id.doneButton);
-        progressTextview=findViewById(R.id.progress_textview);
+        progressTextview = findViewById(R.id.progress_textview);
         finish.setVisibility(View.INVISIBLE);
         finish.setText("Finish");
         finish.setOnClickListener(view -> {
@@ -119,6 +119,8 @@ public class CalibrationActivity extends AppCompatActivity implements UartPacket
         instructions.setText("Ready to Calibrate?\n Empty your water bottle and place the Kiwi Companion lid on and turn it on.\n Press next when you have done this");
         if(mBlePeripheral != null && !mBlePeripheral.isDisconnected()){
             setupUart();
+        } else {
+
         }
     }
 

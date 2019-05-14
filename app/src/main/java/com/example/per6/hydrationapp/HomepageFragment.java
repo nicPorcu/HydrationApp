@@ -3,6 +3,7 @@ package com.example.per6.hydrationapp;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothGatt;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -166,6 +168,16 @@ public class HomepageFragment extends Fragment implements UartPacketManagerBase.
         if(mBlePeripheral != null && !mBlePeripheral.isDisconnected()){
             setupUart();
             Log.d(TAG, "wireWidgets: setUpUart");
+        } else {
+            Snackbar snackbar = Snackbar.make(rootView, "You are not connected, would you like to connect?", Snackbar.LENGTH_LONG);
+            snackbar.setAction("Connect", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(getActivity(), BluetoothActivity.class);
+                    startActivity(i);
+                }
+            });
+            snackbar.show();
         }
 
         mSwipeRefreshLayout = rootView.findViewById(R.id.syncLayout);
@@ -246,6 +258,16 @@ public class HomepageFragment extends Fragment implements UartPacketManagerBase.
         } else {
             if(mBlePeripheral != null && !mBlePeripheral.isDisconnected()){
                 send();
+            } else {
+                Snackbar snackbar = Snackbar.make(rootView, "You have been disconnected, would you like to connect?", Snackbar.LENGTH_LONG);
+                snackbar.setAction("Connect", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent i = new Intent(getActivity(), BluetoothActivity.class);
+                        startActivity(i);
+                    }
+                });
+                snackbar.show();
             }
         }
     }
