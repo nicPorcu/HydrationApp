@@ -20,6 +20,8 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.backendless.Backendless;
+import com.backendless.BackendlessUser;
+import com.backendless.UserService;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.DataQueryBuilder;
@@ -118,6 +120,7 @@ public class MyWaterBottlesFragment extends Fragment {
             @Override
             public void handleResponse(List<WaterBottle> response) {
                 waterBottleList.addAll(response);
+                Log.d(TAG, "handleResponse:"+ waterBottleList.get(0).getBottleFillDataPoints());
                 Log.d(TAG, "handleResponse: "+ waterBottleList.toString());
                 adapter.notifyDataSetChanged();
                 Log.d(TAG, "handleResponse: stuff up");
@@ -166,7 +169,31 @@ public class MyWaterBottlesFragment extends Fragment {
             public void setCurrentBottle(View v, int pos) {
 
                 WaterBottle w= waterBottleList.get(pos);
-                Backendless.UserService.CurrentUser().setProperty("currentWaterBottle",w );
+                Log.d(TAG, "setCurrentBottle: "+w.getBottleName());
+                BackendlessUser user= Backendless.UserService.CurrentUser();
+                user.setProperty("currentWaterBottle", waterBottleList.get(pos));
+                Log.d(TAG, "setCurrentBottle: "+ waterBottleList.get(pos).getObjectId());
+
+                Log.d(TAG, "setCurrentBottle: current bottle "+ ((WaterBottle)user.getProperty("currentWaterBottle")).getBottleName());
+                Backendless.Persistence.save(user, new AsyncCallback<BackendlessUser>()
+                {
+                    @Override
+                    public void handleResponse( BackendlessUser response )
+                    {
+                        Log.d(TAG, "handleResponse: user");
+                        Log.d(TAG, "handleResponse: "+ response.getProperty("currentWaterBottle"));
+
+                    }
+
+                    @Override
+                    public void handleFault( BackendlessFault fault )
+                    {
+                        Log.d(TAG, "handleFault: "+fault.getMessage());
+                        Log.d(TAG, "handleFault: "+fault.getDetail());
+                    }
+                } );
+                
+
             }
 
 

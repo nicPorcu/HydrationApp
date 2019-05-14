@@ -61,6 +61,7 @@ public class MyInfoFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView: oncreatev 1");
 
         // Inflate the layout for this fragment
         rootview=inflater.inflate(R.layout.fragment_my_info, container, false);
@@ -69,9 +70,11 @@ public class MyInfoFragment extends Fragment {
         sharedPref = context.getSharedPreferences(
                 getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         user= Backendless.UserService.CurrentUser();
-
+        Log.d(TAG, "onCreateView: oncreatev 2");
 
         getSharedPref();
+
+        Log.d(TAG, "onCreateView: oncreatev ");
 
         return rootview;
 
@@ -79,6 +82,7 @@ public class MyInfoFragment extends Fragment {
 
 
     private void wireWidgets() {
+        Log.d(TAG, "wireWidgets: wirewidgets 1");
          submitButton= rootview.findViewById(R.id.button_submit);
          weightEditText=rootview.findViewById(R.id.weight_edittext);
          exerciseEditText=rootview.findViewById(R.id.exercise_edittext);
@@ -88,12 +92,13 @@ public class MyInfoFragment extends Fragment {
          estimateTextView=rootview.findViewById(R.id.estimate_textview);
          infoTextView=rootview.findViewById(R.id.info_textview);
          infoTextView.setText("Please enter the following infomation about yourself:");
-         submitButton.setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View v) {
-                 updateDailyWaterGoal();
-             }
+         submitButton.setOnClickListener(v -> {
+             updateDailyWaterGoal();
+             Log.d(TAG, "wireWidgets: why am I here");
+             ((SetupActivity)(getActivity())).onReturnToctivity();
+
          });
+        Log.d(TAG, "wireWidgets: wirewidgets2");
 
 
     }
@@ -108,8 +113,10 @@ public class MyInfoFragment extends Fragment {
         calculateDailyWaterGoal(weight,dailyExercise, isPregnant);
 
         estimateTextView.setText("Your goal is to drink "+ dailyWaterGoal + " ounces of water a day");
+        estimateTextView.setVisibility(View.VISIBLE);
         updateSharedPreferences(weight, dailyExercise, areYaPregnantButton.isChecked(), dailyWaterGoal);
         updateBackendless();
+
 
     }
 
@@ -170,6 +177,8 @@ public class MyInfoFragment extends Fragment {
                estimateTextView.setText("Your goal is to drink " + dailyWaterGoal + " ounces of water a day");
            }catch (NullPointerException n){
                Log.d(TAG, "getSharedPref: null pointer"+n.getMessage());
+               estimateTextView.setVisibility(View.INVISIBLE);
+
            }
        }
 

@@ -37,7 +37,6 @@ public class MyFragmentLeaderboardRecyclerViewAdapter extends RecyclerView.Adapt
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        User user= users.get(position);
         holder.mIdView.setText(users.get(position).getName());
         holder.mContentView.setText(users.get(position).getCurrentStreak());
 

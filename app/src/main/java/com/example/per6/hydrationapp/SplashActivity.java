@@ -36,7 +36,7 @@ public class SplashActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPref.edit();
 
         int userExists = sharedPref.getInt(getString(R.string.user), 0);
-
+        userExists=0;
         //checks if previous user exists
         if (userExists == 0) {
             Log.d(TAG, "onCreate: launching login");

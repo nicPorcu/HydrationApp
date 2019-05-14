@@ -92,6 +92,7 @@ public class WaterBottleAdapter extends RecyclerView.Adapter<WaterBottleAdapter.
             Log.d(TAG, "ViewHolder: hi");
             mNameView = (TextView) view.findViewById(R.id.water_bottle_name);
             mCapacityView= view.findViewById(R.id.bottle_capacity);
+            isCurrentBottleCheckbox=view.findViewById(R.id.is_current_bottle_checkbox);
             recyclerViewOnClick=click;
             isCurrentBottleCheckbox.setOnClickListener(this);
             itemView.setOnClickListener(this);
@@ -108,6 +109,7 @@ public class WaterBottleAdapter extends RecyclerView.Adapter<WaterBottleAdapter.
 
                 if  (v.getId()==R.id.is_current_bottle_checkbox){
                         recyclerViewOnClick.setCurrentBottle(v, getAdapterPosition());
+
 
                 }else{
                     recyclerViewOnClick.onClick(v, getAdapterPosition());
