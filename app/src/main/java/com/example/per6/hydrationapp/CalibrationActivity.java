@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,6 +49,7 @@ public class CalibrationActivity extends AppCompatActivity implements UartPacket
     private final Handler mMainHandler = new Handler(Looper.getMainLooper());
     private boolean uartSetup = false;
     private long numberOfRecievedBytes;
+    private ProgressBar getingData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,12 +65,17 @@ public class CalibrationActivity extends AppCompatActivity implements UartPacket
 
     private void wireWidgets() {
         context = this;
-        fullBottle=waterBottle.getCapacity(); //todo update
-        finish=findViewById(R.id.doneButton);
+        fullBottle = waterBottle.getCapacity(); //todo update
+
+        getingData = findViewById(R.id.loadingBluetooth);
+        getingData.setVisibility(View.GONE);
+        getingData.setIndeterminate(true);
+
         measurementNumber = 0;
         numberOfRecievedBytes = 0;
-        finish.setVisibility(View.INVISIBLE);
+
         measurements = new int[fullBottle];
+
         nextButton = findViewById(R.id.nextButton);
         nextButton.setOnClickListener(view -> {
             if (measurementNumber < fullBottle) {
@@ -88,6 +95,8 @@ public class CalibrationActivity extends AppCompatActivity implements UartPacket
                 }
         });
 
+        finish = findViewById(R.id.doneButton);
+        finish.setVisibility(View.INVISIBLE);
         finish.setText("Finish");
         finish.setOnClickListener(view -> {
             updateBottle();
@@ -100,8 +109,10 @@ public class CalibrationActivity extends AppCompatActivity implements UartPacket
             finish();
 
         });
+
         instructions = findViewById(R.id.instruction);
         instructions.setText("Ready to Calibrate?\n Empty your water bottle and place the Kiwi Companion lid on and turn it on.\n Press next when you have done this");
+
         setupUart();
     }
 
@@ -134,10 +145,13 @@ public class CalibrationActivity extends AppCompatActivity implements UartPacket
                     }
                 }
             }));
+        } else {
+            send();
         }
     }
 
     public void send() {
+        getingData.setVisibility(View.VISIBLE);
         if (!(mUartData instanceof UartPacketManager)) {
             Log.e(TAG, "Error send with invalid uartData class");
             return;
@@ -150,6 +164,7 @@ public class CalibrationActivity extends AppCompatActivity implements UartPacket
         UartPacketManager uartData = (UartPacketManager) mUartData;
 
         BlePeripheralUart blePeripheralUart = mBlePeripheralsUart.get(0);
+
         uartData.send(blePeripheralUart, "0");
     }
 
@@ -163,6 +178,8 @@ public class CalibrationActivity extends AppCompatActivity implements UartPacket
             measurements[measurementNumber] = Integer.parseInt(text); //placeholder
             Log.d(TAG, "onUartPacket: "+measurements[measurementNumber]);
             Log.d(TAG, "onUartPacket: recieved"+measurementNumber);
+
+            getingData.setVisibility(View.GONE);
             measurementNumber++;
             nextButton.setClickable(true);
             numberOfRecievedBytes = mUartData.getReceivedBytes();
