@@ -38,6 +38,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.Toast;
 
 
 import com.example.per6.hydrationapp.ble.BleManager;
@@ -214,17 +215,23 @@ public class BluetoothActivity extends AppCompatActivity implements ScannerStatu
             skip.setOnClickListener(view -> {
                 Log.d(TAG, "onClick: click");
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(BluetoothActivity.this);
-                builder.setMessage("Are You Sure?\nSkipping connecting will limit functionality of the app");
-                builder.setPositiveButton(R.string.yes, (dialog, which) -> {
-                    Intent returnIntent = new Intent();
-                    returnIntent.putExtra("peripheralIdentifier", "");
-                    setResult(Activity.RESULT_OK, returnIntent);
-                    finish();
-                });
-                builder.setNegativeButton(R.string.no, (dialog, which) -> {
-                });
-                builder.create().show();
+                Intent i=getIntent();
+                if(i.getStringExtra("fromSetup")==null) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(BluetoothActivity.this);
+                    builder.setMessage("Are You Sure?\nSkipping connecting will limit functionality of the app");
+                    builder.setPositiveButton(R.string.yes, (dialog, which) -> {
+                        Intent returnIntent = new Intent();
+                        returnIntent.putExtra("peripheralIdentifier", "");
+                        setResult(Activity.RESULT_OK, returnIntent);
+                        finish();
+                    });
+                    builder.setNegativeButton(R.string.no, (dialog, which) -> {
+                    });
+                    builder.create().show();
+                }else{
+                    Toast.makeText(context, "Please connect to bluetooth to finish setting up your account", Toast.LENGTH_SHORT).show();
+                }
+
 
             });
         }

@@ -39,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void wireWidgets() {
         Log.d(TAG, "wireWidgets: wire widgets");
-        submitButton=(Button)findViewById(R.id.button_submit);
+        submitButton=(Button)findViewById(R.id.button_submit_myinfo);
         usernameEdittext=(EditText) findViewById(R.id.login_edittext_username);
         passwordEdittext=(EditText) findViewById(R.id.login_edittext_password);
         createAccountTextView =(TextView) findViewById(R.id.textview_create_account);

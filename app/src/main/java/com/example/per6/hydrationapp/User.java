@@ -1,5 +1,7 @@
 package com.example.per6.hydrationapp;
 
+import com.backendless.BackendlessUser;
+
 import java.util.List;
 
 public class User {

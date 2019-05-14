@@ -1,7 +1,6 @@
 package com.example.per6.hydrationapp;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -53,7 +52,7 @@ public class CreateAccountFragment extends Fragment {
 
     private void wireWidgets() {
         Log.d(TAG, "wireWidgets: wire widgets");
-        submitButton = (Button) rootView.findViewById(R.id.button_submit);
+        submitButton = (Button) rootView.findViewById(R.id.button_submit_myinfo);
         usernameEdittext = (EditText) rootView.findViewById(R.id.editText_username);
         passwordEdittext = (EditText) rootView.findViewById(R.id.editText_password);
         context=getContext();
@@ -114,7 +113,7 @@ public class CreateAccountFragment extends Fragment {
                 String check = sharedPref.getString("userUserName", null);
                 Log.d(TAG, "handleResponse: "+check);
 
-                ((SetupActivity)(getActivity())).onReturnToctivity();
+                ((SetupActivity)(getActivity())).onReturnToActivity();
 
 
             }

@@ -16,44 +16,35 @@
 
 
             <TextView
-                android:id="@+id/water_bottle_name"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:text="Text"
-                android:textColor="@color/black"
-                android:textSize="18sp"
-                app:layout_constraintEnd_toStartOf="@+id/bottle_capacity"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/bottle_capacity"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:text="TextView"
-                android:textColor="@color/black"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <RadioButton
-                android:id="@+id/is_current_bottle_checkbox"
-                android:layout_width="match_parent"
+                android:id="@+id/username_view"
+                android:layout_width="324dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
-                android:text="Set as Current Water Bottle"
-                android:textColor="@color/black"
+                android:text="Text"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/bottle_capacity"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/days_logged_view"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:text="TextView"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/water_bottle_name" />
+                app:layout_constraintStart_toEndOf="@+id/username_view"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
 
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>

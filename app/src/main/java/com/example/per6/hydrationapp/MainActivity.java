@@ -75,6 +75,17 @@ public class MainActivity extends AppCompatActivity
         if(savedInstanceState == null){
             Intent i = new Intent(this, BluetoothActivity.class);
             startActivityForResult(i, bluetoothActivityRequestCode );
+        } else {
+            Intent i=getIntent();
+            peripheralIdentifier=i.getStringExtra("peripheralIdentifier");
+            HomepageFragment fragment = HomepageFragment.newInstance(peripheralIdentifier);
+            if (fm != null) {
+                FragmentTransaction fragmentTransaction = fm.beginTransaction()
+                        .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right, R.anim.slide_in_right, R.anim.slide_out_left)
+                        .replace(R.id.fragment_container, fragment, "Modules");
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
         }
     }
 

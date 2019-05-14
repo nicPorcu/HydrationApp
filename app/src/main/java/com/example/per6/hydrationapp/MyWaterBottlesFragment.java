@@ -3,8 +3,10 @@ package com.example.per6.hydrationapp;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -31,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 import static com.example.per6.hydrationapp.ConnectedPeripheralFragment.createFragmentArgs;
 
 
@@ -40,6 +43,7 @@ public class MyWaterBottlesFragment extends Fragment {
     private static String singlePeripheralIdentifierMaster;
     private WaterBottleAdapter adapter;
     private LinearLayoutManager layoutManager;
+    private SharedPreferences sharedPref;
 
     private List<WaterBottle> waterBottleList;
     private RecyclerView recyclerView;
@@ -101,6 +105,8 @@ public class MyWaterBottlesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_user_info, container, false);
+        sharedPref = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+
 
         wireWidgets();
         getBottles();
@@ -168,30 +174,32 @@ public class MyWaterBottlesFragment extends Fragment {
             @Override
             public void setCurrentBottle(View v, int pos) {
 
+
                 WaterBottle w= waterBottleList.get(pos);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString("currentWaterBottleId", w.getObjectId());
+                editor.apply();
                 Log.d(TAG, "setCurrentBottle: "+w.getBottleName());
                 BackendlessUser user= Backendless.UserService.CurrentUser();
                 user.setProperty("currentWaterBottle", waterBottleList.get(pos));
                 Log.d(TAG, "setCurrentBottle: "+ waterBottleList.get(pos).getObjectId());
+                List<WaterBottle> whyIsThisAThing= new ArrayList<>();
+                whyIsThisAThing.add(waterBottleList.get(pos));
 
                 Log.d(TAG, "setCurrentBottle: current bottle "+ ((WaterBottle)user.getProperty("currentWaterBottle")).getBottleName());
-                Backendless.Persistence.save(user, new AsyncCallback<BackendlessUser>()
-                {
+                Backendless.Persistence.of( BackendlessUser.class ).setRelation(user, "currentWaterBottle", whyIsThisAThing, new AsyncCallback<Integer>() {
                     @Override
-                    public void handleResponse( BackendlessUser response )
-                    {
-                        Log.d(TAG, "handleResponse: user");
-                        Log.d(TAG, "handleResponse: "+ response.getProperty("currentWaterBottle"));
+                    public void handleResponse(Integer response) {
+                        Log.d(TAG, "handleResponse: yay");
 
                     }
 
                     @Override
-                    public void handleFault( BackendlessFault fault )
-                    {
+                    public void handleFault(BackendlessFault fault) {
                         Log.d(TAG, "handleFault: "+fault.getMessage());
-                        Log.d(TAG, "handleFault: "+fault.getDetail());
+
                     }
-                } );
+                });
                 
 
             }

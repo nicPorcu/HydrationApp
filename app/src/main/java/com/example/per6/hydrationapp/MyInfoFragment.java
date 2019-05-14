@@ -85,7 +85,7 @@ public class MyInfoFragment extends Fragment {
 
     private void wireWidgets() {
         Log.d(TAG, "wireWidgets: wirewidgets 1");
-         submitButton= rootview.findViewById(R.id.button_submit);
+         submitButton= rootview.findViewById(R.id.button_submit_myinfo);
          weightEditText=rootview.findViewById(R.id.weight_edittext);
          exerciseEditText=rootview.findViewById(R.id.exercise_edittext);
          areYaPregnantButton=rootview.findViewById(R.id.pregnancy_togglebutton);
@@ -97,7 +97,7 @@ public class MyInfoFragment extends Fragment {
          submitButton.setOnClickListener(v -> {
              updateDailyWaterGoal();
              Log.d(TAG, "wireWidgets: why am I here");
-             ((SetupActivity)(getActivity())).onReturnToctivity();
+             ((SetupActivity)(getActivity())).onReturnToActivity();
 
          });
         Log.d(TAG, "wireWidgets: wirewidgets2");

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,6 +26,8 @@ public class SetupActivity extends AppCompatActivity {
     private Context context;
     private Fragment currentFragment;
     private FragmentManager fm;
+    private static final int bluetoothActivityRequestCode=3;
+    private String peripheralIdentifier;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +48,7 @@ public class SetupActivity extends AppCompatActivity {
     }
 
 
-    public void onReturnToctivity() {
-        Log.d(TAG, "onBackPressed: "+getFragmentManager().getBackStackEntryCount());
+    public void onReturnToActivity() {
 
         if(currentFragment instanceof CreateAccountFragment){
             currentFragment=new MyInfoFragment();
@@ -55,9 +57,36 @@ public class SetupActivity extends AppCompatActivity {
                     .replace(R.id.fragment_container, currentFragment, "My Info")
                     .commit();
         }
-        if(currentFragment instanceof MyInfoFragment){
-            Intent i= new Intent(SetupActivity.this, MainActivity.class);
-            startActivity(i);//
+        else if(currentFragment instanceof MyInfoFragment){
+            Intent i = new Intent(this, BluetoothActivity.class);
+            i.putExtra("fromSetup", "hi");
+            startActivityForResult(i, bluetoothActivityRequestCode );
+
+        }
+        else if(currentFragment instanceof BottleEditorFragment){
+            Intent i =new Intent(SetupActivity.this, MainActivity.class);
+            i.putExtra("peripheralIdentifier",currentFragment.getArguments().getString("peripheralIdentifier"));
+            startActivity(i, currentFragment.getArguments());
+        }
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == bluetoothActivityRequestCode){
+            if(resultCode == RESULT_OK) {
+                peripheralIdentifier = data.getStringExtra("peripheralIdentifier");
+                currentFragment= BottleEditorFragment.newInstance(peripheralIdentifier);
+                FragmentTransaction fragmentTransaction = fm.beginTransaction()
+                        .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right, R.anim.slide_in_right, R.anim.slide_out_left)
+                        .replace(R.id.fragment_container, currentFragment, "Bottle Editor");
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+
+
         }
     }
 

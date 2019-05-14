@@ -11,14 +11,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.backendless.Backendless;
+import com.backendless.BackendlessUser;
+import com.backendless.async.callback.AsyncCallback;
+import com.backendless.exceptions.BackendlessFault;
+import com.backendless.persistence.DataQueryBuilder;
+import com.backendless.persistence.LoadRelationsQueryBuilder;
+
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class WaterBottleAdapter extends RecyclerView.Adapter<WaterBottleAdapter.ViewHolder>{
     private RecyclerViewOnClick click;
     private final List<WaterBottle> waterBottles;
+    int mSelectedItem=-1;
     private Context context;
     private View rootview;
     public static final String TAG= "WaterBottleAdapter";
@@ -39,6 +50,7 @@ public class WaterBottleAdapter extends RecyclerView.Adapter<WaterBottleAdapter.
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         rootview = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.water_bottle_info_item, viewGroup, false);
+
         return new ViewHolder(rootview, click);
     }
 
@@ -49,10 +61,31 @@ public class WaterBottleAdapter extends RecyclerView.Adapter<WaterBottleAdapter.
 
             holder.mNameView.setText(waterBottles.get(position).getBottleName());
             holder.mCapacityView.setText(waterBottles.get(position).getCapacity()+"oz");
+        holder.isCurrentBottleCheckbox.setChecked(position == mSelectedItem);
+
+        //radioGroup.addView(holder.isCurrentBottleCheckbox);
 
 
 
-
+//        LoadRelationsQueryBuilder<BackendlessUser> loadRelationsQueryBuilder;
+//        loadRelationsQueryBuilder = LoadRelationsQueryBuilder.of( BackendlessUser.class );
+//        loadRelationsQueryBuilder.setRelationName( "currentWaterBottle" );
+//         Backendless.Data.of( BackendlessUser.class ).loadRelations( Backendless.UserService.CurrentUser().getObjectId(), loadRelationsQueryBuilder, new AsyncCallback<List<BackendlessUser>>() {
+//
+//             @Override
+//             public void handleResponse(List<BackendlessUser> response) {
+//                 if(response.size()!=0) {
+//                     Log.d(TAG, "handleResponse: "+response.get(0));
+//                    // Log.d(TAG, "onBindViewHolder: " + response.get(0).getProperty("currentWaterBottle"));
+//                 }
+//             }
+//
+//             @Override
+//            public void handleFault(BackendlessFault fault) {
+//                 Log.d(TAG, "handleFault: "+fault.getMessage());
+//
+//            }
+//        });
         }
 
 
@@ -82,7 +115,7 @@ public class WaterBottleAdapter extends RecyclerView.Adapter<WaterBottleAdapter.
 
         private TextView mNameView;
         private TextView mCapacityView;
-        private CheckBox isCurrentBottleCheckbox;
+        private RadioButton isCurrentBottleCheckbox;
 
 
 
@@ -108,8 +141,9 @@ public class WaterBottleAdapter extends RecyclerView.Adapter<WaterBottleAdapter.
         public void onClick(View v) {
 
                 if  (v.getId()==R.id.is_current_bottle_checkbox){
+                         mSelectedItem=getAdapterPosition();
                         recyclerViewOnClick.setCurrentBottle(v, getAdapterPosition());
-
+                        notifyDataSetChanged();
 
                 }else{
                     recyclerViewOnClick.onClick(v, getAdapterPosition());
