@@ -38,6 +38,11 @@ public class BottleMeasurement {
 
     public double getOz() {
         //convert from list of BottleFillDataPoints to array of doubles
+        bottle = new WaterBottle();
+        for(int i = 9; i >=0; i++){
+            BottleFillDataPoint b = new BottleFillDataPoint(i);
+        }
+
         List<BottleFillDataPoint> bottleDataPoints = bottle.getBottleFillDataPoints();
         double[] ozValues = new double[bottleDataPoints.size()];
         for(int i = 0; i < bottleDataPoints.size(); i++){
@@ -62,7 +67,7 @@ public class BottleMeasurement {
         //min starts at full bottle = last pos.
         //max starts at empty bottle = 0
         int mid = (int) (minIndex - maxIndex)/2 + maxIndex;
-        if(ozValues[mid] > measurement){ //value at midpoint is larger, ie longer distance ie less water so bring max up to here
+        if(ozValues[mid] >= measurement){ //value at midpoint is larger, ie longer distance ie less water so bring max up to here
             //mid position is at a lower water level than what we lok for, now it is lowest level
             if(ozValues[mid + 1] < measurement){
                 //the next measurement is higher, we have the midpoint!
@@ -74,7 +79,7 @@ public class BottleMeasurement {
                 maxIndex = mid;
                 binarySearch(ozValues);
             }
-        } else if(ozValues[mid] < measurement){
+        } else if(ozValues[mid] <= measurement){
             //mid position is higher water level, becomes new minimum pos., maximum water level
             if(ozValues[mid + 1] > measurement){
                 //the next measurement is lower, we have the midpoint!
@@ -105,6 +110,10 @@ public class BottleMeasurement {
         SimpleDateFormat sdf = new SimpleDateFormat("h:mm a", Locale.ENGLISH);
         sdf.setTimeZone(TimeZone.getDefault());
         return sdf.format(d);
+    }
+
+    public long getDateTime(){
+        return d.getTime();
     }
 
     public String getDate(){

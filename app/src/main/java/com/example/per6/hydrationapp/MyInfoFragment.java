@@ -3,6 +3,7 @@ package com.example.per6.hydrationapp;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,11 +19,12 @@ import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 
+import static com.example.per6.hydrationapp.ConnectedPeripheralFragment.createFragmentArgs;
+
 
 public class MyInfoFragment extends Fragment {
     private static final String TAG = "MyInfoFragment";
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static String singlePeripheralIdentifierMaster;
 
     private View rootview;
     private ToggleButton areYaPregnantButton;
@@ -43,11 +45,11 @@ public class MyInfoFragment extends Fragment {
     }
 
 
-    // TODO: Rename and change types and number of parameters
-    public static MyInfoFragment newInstance() {
-
-
-        return new MyInfoFragment();
+    public static MyInfoFragment newInstance(@Nullable String peripheralIdentifier) {
+        MyInfoFragment fragment = new MyInfoFragment();
+        fragment.setArguments(createFragmentArgs(peripheralIdentifier));
+        singlePeripheralIdentifierMaster = peripheralIdentifier;
+        return fragment;
     }
 
 

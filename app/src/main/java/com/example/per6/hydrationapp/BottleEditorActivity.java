@@ -27,7 +27,7 @@ public class BottleEditorActivity extends AppCompatActivity {
     private WaterBottle waterBottle;
     private String singlePeripheralIdentifier;
     private Context context;
-    private static final int calibrationActivityRequestCode=23;
+    private static final int calibrationActivityRequestCode = 23;
 
 
     @Override
@@ -224,6 +224,10 @@ public class BottleEditorActivity extends AppCompatActivity {
                 Log.d(TAG, "onActivityResult: "+waterBottle.getBottleFillDataPoints().size());
 
                 backendlessUpdateBottle();
+            }
+        } else if(resultCode==RESULT_CANCELED){
+            if(requestCode==calibrationActivityRequestCode){
+                hasBeenCalibrated = false;
             }
         }
 

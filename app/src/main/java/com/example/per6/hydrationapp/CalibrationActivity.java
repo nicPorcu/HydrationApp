@@ -12,6 +12,7 @@ import android.os.Looper;
 import android.support.design.widget.CoordinatorLayout;
 
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -26,6 +27,7 @@ import com.example.per6.hydrationapp.ble.BleScanner;
 import com.example.per6.hydrationapp.ble.UartPacket;
 import com.example.per6.hydrationapp.ble.UartPacketManager;
 import com.example.per6.hydrationapp.ble.UartPacketManagerBase;
+import com.example.per6.hydrationapp.style.StyledSnackBar;
 import com.example.per6.hydrationapp.utils.DialogUtils;
 
 import java.lang.ref.WeakReference;
@@ -90,6 +92,7 @@ public class CalibrationActivity extends AppCompatActivity implements UartPacket
                     }
                 } else {
                 finish.setVisibility(View.VISIBLE);
+                nextButton.setCustomSize(0);
 
                 instructions.setText("Thank you! Now your water bottle is ready for use");
                 }
@@ -112,8 +115,9 @@ public class CalibrationActivity extends AppCompatActivity implements UartPacket
 
         instructions = findViewById(R.id.instruction);
         instructions.setText("Ready to Calibrate?\n Empty your water bottle and place the Kiwi Companion lid on and turn it on.\n Press next when you have done this");
-
-        setupUart();
+        if(mBlePeripheral != null && !mBlePeripheral.isDisconnected()){
+            setupUart();
+        }
     }
 
     protected void setupUart() {
@@ -146,7 +150,24 @@ public class CalibrationActivity extends AppCompatActivity implements UartPacket
                 }
             }));
         } else {
-            send();
+            if(mBlePeripheral != null && !mBlePeripheral.isDisconnected()){
+                send();
+            } else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage("Kiwi Companion disconnected, please reconnect and try again");
+                builder.setPositiveButton(getString(R.string.reconnect), (dialog, which) -> {
+                    Intent i = new Intent(this, BluetoothActivity.class);
+                    startActivity(i);
+                });
+                builder.setNegativeButton(getString(R.string.neverMind), (dialog, which) -> {
+                    Intent resultIntent = new Intent();
+
+                    //resultIntent.putExtra("bottleFillDataPoints",  waterBottle.getBottleFillDataPoints());
+                    setResult(Activity.RESULT_CANCELED, resultIntent);
+                    finish();
+                });
+                builder.create().show();
+            }
         }
     }
 

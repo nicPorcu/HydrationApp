@@ -3,6 +3,7 @@ package com.example.per6.hydrationapp;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -22,11 +23,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 
 
-import com.example.per6.hydrationapp.LeaderboardFragment.LeaderboardFragment;
 import com.example.per6.hydrationapp.ble.BlePeripheral;
+import com.example.per6.hydrationapp.ble.ScannerViewModel;
 
 import static android.support.v4.app.NotificationCompat.VISIBILITY_PUBLIC;
 
@@ -68,19 +70,11 @@ public class MainActivity extends AppCompatActivity
         sharedPref = context.getSharedPreferences(
                 getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         fm = getSupportFragmentManager();
-        createNotificationChannel();
-        buildNotification();
-
-        if (savedInstanceState == null) {
+//        createNotificationChannel();
+//        buildNotification();
+        if(savedInstanceState == null){
             Intent i = new Intent(this, BluetoothActivity.class);
             startActivityForResult(i, bluetoothActivityRequestCode );
-        } else {
-            //todo fix
-//            hasUserAlreadyBeenAskedAboutBluetoothStatus = savedInstanceState.getBoolean("hasUserAlreadyBeenAskedAboutBluetoothStatus");
-//            mMainFragment = (MainFragment) fm.findFragmentByTag("Main");
-//            fm.beginTransaction()
-//                    .add(R.id.contentLayout, mMainFragment, "Main")
-//                    .commit();
         }
     }
 
@@ -101,19 +95,19 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-            currentFragment = new HomepageFragment();
+            currentFragment = HomepageFragment.newInstance(peripheralIdentifier);
 
         } else if (id == R.id.nav_leaderboard) {
-            currentFragment = new LeaderboardFragment();
+            currentFragment = LeaderboardFragment.newInstance(peripheralIdentifier);
 
         } else if (id == R.id.nav_myInfo) {
             currentFragment = MyWaterBottlesFragment.newInstance(peripheralIdentifier);
 
         } else if (id == R.id.nav_customization) {
-            currentFragment = new MyInfoFragment();
+            currentFragment = MyInfoFragment.newInstance(peripheralIdentifier);
 
         } else if (id == R.id.nav_settings) {
-            currentFragment = new SettingsFragment();
+            currentFragment = SettingsFragment.newInstance(peripheralIdentifier);
 
         }
         if(currentFragment != null){
@@ -211,10 +205,12 @@ public class MainActivity extends AppCompatActivity
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
+        //todo get notification freq and set it to be eaul to shared pref at getString(R.string.notification_frequency)
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("")
-                .setContentText("Hi there world.")
-                .setSmallIcon(R.drawable.ic_delete_white_24dp)
+                .setContentText("Drink water")
+                .setSmallIcon(R.drawable.happy_dog)
                 .setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setCategory(NotificationCompat.CATEGORY_REMINDER)

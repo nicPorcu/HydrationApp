@@ -60,24 +60,6 @@ public class ScannerViewModel extends AndroidViewModel implements BleScanner.Ble
     private final MutableLiveData<Integer> mNumPeripheralsFilteredOut = new MutableLiveData<>();
     private final MutableLiveData<Integer> mNumPeripheralsFiltered = new MutableLiveData<>();
 
-    private LiveData<String> mRssiFilterDescription = Transformations.map(mRssiFilterValue, new Function<Integer, String>() {
-        @Override
-        public String apply(Integer rssi) {
-            return String.format(Locale.ENGLISH, ScannerViewModel.this.getApplication().getString(R.string.scanner_filter_rssivalue_format), rssi);
-        }
-    });
-
-    //todo determine how to fix
-
-    private LiveData<Boolean> mIsAnyFilterEnabled = Transformations.map(mFiltersLiveDataMerger, FilterData::isAnyFilterEnabled);
-
-    private LiveData<String> mFiltersDescription = Transformations.map(mFiltersLiveDataMerger, new Function<FilterData, String>() {
-        @Override
-        public String apply(FilterData input) {
-            String filtersDescription = input.getDescription();
-            return filtersDescription != null ? String.format(Locale.ENGLISH, ScannerViewModel.this.getApplication().getString(R.string.scanner_filter_currentfilter_format), filtersDescription) : ScannerViewModel.this.getApplication().getString(R.string.scanner_filter_nofilter);
-        }
-    });
 
 
     private LiveData<List<BlePeripheral>> mFilteredBlePeripherals = Transformations.switchMap(mScanFilterLiveDataMerger, new Function<ScanData, LiveData<List<BlePeripheral>>>() {
@@ -101,14 +83,6 @@ public class ScannerViewModel extends AndroidViewModel implements BleScanner.Ble
             if (filterData.isOnlyUartEnabled) {
                 for (Iterator<BlePeripheral> it = results.iterator(); it.hasNext(); ) {
                     if (BleScanner.getDeviceType(it.next()) != BleScanner.kDeviceType_Uart) {
-                        it.remove();
-                    }
-                }
-            }
-
-            if (!filterData.isUnnamedEnabled) {
-                for (Iterator<BlePeripheral> it = results.iterator(); it.hasNext(); ) {
-                    if (it.next().getDevice().getName() == null) {
                         it.remove();
                     }
                 }

@@ -21,7 +21,6 @@ import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
-import com.example.per6.hydrationapp.LeaderboardFragment.LeaderboardFragment;
 
 
 public class HydrationApp extends AppCompatActivity

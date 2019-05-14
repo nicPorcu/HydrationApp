@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.lang.ref.WeakReference;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -61,7 +62,6 @@ public class BlePeripheralUart {
                     UartRxHandler handler = weakUartRxHandler.get();
                     if (handler != null) {
                         byte[] data = mUartRxCharacteristic.getValue();
-                        Log.d(TAG, "uartEnable: " + data.toString());
                         handler.onRxDataReceived(data, identifier, status);
                     }
                 }

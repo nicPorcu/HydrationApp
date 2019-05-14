@@ -1,4 +1,4 @@
-package com.example.per6.hydrationapp.LeaderboardFragment;
+package com.example.per6.hydrationapp;
 
 import com.example.per6.hydrationapp.User;
 

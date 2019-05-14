@@ -14,6 +14,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -100,7 +101,6 @@ public class BluetoothActivity extends AppCompatActivity implements ScannerStatu
 
     private void onActivityCreatedStuff() {
         mScannerViewModel = ViewModelProviders.of(this).get(ScannerViewModel.class);
-
         // Scan results
         mScannerViewModel.getFilteredBlePeripherals().observe(this, new Observer<List<BlePeripheral>>() {
             @Override
@@ -108,6 +108,9 @@ public class BluetoothActivity extends AppCompatActivity implements ScannerStatu
                 mBlePeripheralsAdapter.setBlePeripherals(blePeripherals);
             }
         });
+
+
+
 
         // Scanning
         mScannerViewModel.getScanningErrorCode().observe(this, new Observer<Integer>() {
@@ -223,9 +226,6 @@ public class BluetoothActivity extends AppCompatActivity implements ScannerStatu
                 });
                 builder.create().show();
 
-
-
-
             });
         }
     }
@@ -286,9 +286,6 @@ public class BluetoothActivity extends AppCompatActivity implements ScannerStatu
             case BlePeripheral.STATE_CONNECTING:
                 showConnectionStateDialog(R.string.peripheraldetails_connecting, blePeripheral);
                 break;
-            case BlePeripheral.STATE_CONNECTED:
-                showConnectionStateDialog(R.string.peripheraldetails_discoveringservices, blePeripheral);
-                break;
         }
     }
 
@@ -344,10 +341,8 @@ public class BluetoothActivity extends AppCompatActivity implements ScannerStatu
     private void showConnectionStateError(String message) {
         removeConnectionStateDialog();
 
-
         View view = findViewById(android.R.id.content);
         Snackbar snackbar = Snackbar.make(view, message, Snackbar.LENGTH_LONG);
-        StyledSnackBar.styleSnackBar(snackbar, context);
         snackbar.show();
 
     }
@@ -482,7 +477,7 @@ public class BluetoothActivity extends AppCompatActivity implements ScannerStatu
 
     public void startPeripheralModules(String peripheralIdentifier) {
         //todo make fragement to which you want app to go
-
+        Log.d(TAG, "startPeripheralModules: "+peripheralIdentifier);
         Intent returnIntent = new Intent();
         returnIntent.putExtra("peripheralIdentifier", peripheralIdentifier);
         setResult(Activity.RESULT_OK, returnIntent);
