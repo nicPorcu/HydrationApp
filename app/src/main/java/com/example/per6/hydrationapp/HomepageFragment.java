@@ -3,10 +3,12 @@ package com.example.per6.hydrationapp;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothGatt;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -17,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.per6.hydrationapp.ble.BleManager;
 import com.example.per6.hydrationapp.ble.BlePeripheral;
@@ -29,6 +32,7 @@ import com.example.per6.hydrationapp.utils.DialogUtils;
 
 import java.lang.ref.WeakReference;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -39,6 +43,7 @@ import java.util.TimeZone;
 
 
 import com.backendless.Backendless;
+import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
@@ -67,7 +72,7 @@ public class HomepageFragment extends Fragment implements UartPacketManagerBase.
     private long numberOfRecievedBytes;
     private int dailyWaterGoal;
     private int currentWaterConsumption;
-    private BottleMeasurement dataPoints[];
+    private ArrayList<BottleMeasurement> dataPoints;
     private WaterBottle currentBottle;
     private GregorianCalendar calendar;
     private long timeLastSynced;
@@ -76,6 +81,11 @@ public class HomepageFragment extends Fragment implements UartPacketManagerBase.
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ArrayList<String> values;
     private String text;
+    private SimpleDateFormat sdf;
+    private SharedPreferences sharedPref;
+    private SimpleDateFormat sdf2;
+    private String lastSyncedMessage;
+    private boolean canSend;
 
     public HomepageFragment() {
         // Required empty public constructor
@@ -91,7 +101,6 @@ public class HomepageFragment extends Fragment implements UartPacketManagerBase.
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -108,12 +117,24 @@ public class HomepageFragment extends Fragment implements UartPacketManagerBase.
         //dailyWaterGoal = (Integer) Backendless.UserService.CurrentUser().getProperty("dailyWaterGoal");
         dailyWaterGoal = 90;
         currentWaterConsumption = 50;
-        //todo, dont crash app if they press skip
+        canSend = true;
 
         //dogChange(0.0);
         //imageDog.setImageResource(R.drawable.ic_menu_camera);
+        sdf = new SimpleDateFormat("h:mm", Locale.US);
+        sdf2 = new SimpleDateFormat("h:mm a", Locale.US);
 
         graphView = rootView.findViewById(R.id.graphView);
+        graphView.getGridLabelRenderer().setNumHorizontalLabels(8);
+        graphView.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter(){
+            @Override
+            public String formatLabel(double value, boolean isValueX){
+                if(isValueX){
+                    return sdf.format(new Date((long) value));
+                }
+                return super.formatLabel(value,isValueX );
+            }
+        });
         dataForGraph = new LineGraphSeries<DataPoint>();
 
         context = getActivity();
@@ -131,32 +152,43 @@ public class HomepageFragment extends Fragment implements UartPacketManagerBase.
         progressBarWater.setProgress(currentWaterConsumption);
 
         waterBottle = new WaterBottle(); //todo get current bottle
+        dataPoints = new ArrayList<>();
 
         calendar = new GregorianCalendar(TimeZone.getDefault());
-        timeLastSynced = calendar.getTime().getTime(); //todo change to save between states
+        sharedPref = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        timeLastSynced = sharedPref.getLong(getActivity().getResources().getString(R.string.timeLastSynced),calendar.getTime().getTime() ); //todo change to save between states
+
+
+        lastSyncedMessage = "Last Synced at "+ sdf2.format(timeLastSynced);
+        textLastSync.setText(lastSyncedMessage);
+
+        mBlePeripheral = BleScanner.getInstance().getPeripheralWithIdentifier(singlePeripheralIdentifierMaster);
+        if(mBlePeripheral != null && !mBlePeripheral.isDisconnected()){
+            setupUart();
+            Log.d(TAG, "wireWidgets: setUpUart");
+        }
 
         mSwipeRefreshLayout = rootView.findViewById(R.id.syncLayout);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (uartSetup) {
-                    send();
-                } else {
-                    setupUart();
+                if(mBlePeripheral != null && !mBlePeripheral.isDisconnected()){
+                    if (uartSetup) {
+                        if(canSend){
+                            send();
+                        }
+                    } else {
+                        setupUart();
+                    }
                 }
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
-                }, 500);
+                }, 1000);
             }
         });
-
-        mBlePeripheral = BleScanner.getInstance().getPeripheralWithIdentifier(singlePeripheralIdentifierMaster);
-        if(mBlePeripheral != null && !mBlePeripheral.isDisconnected()){
-            setupUart();
-        }
 
     }
 
@@ -191,6 +223,8 @@ public class HomepageFragment extends Fragment implements UartPacketManagerBase.
                 if (status == BluetoothGatt.GATT_SUCCESS) {
                     Log.d(TAG, "Uart enabled");
                     uartSetup = true;
+                    timeLastSynced = calendar.getTime().getTime();
+                    Log.d(TAG, "timeSynced: "+sdf.format(calendar.getTime()));
                     send();
                 } else {
                     WeakReference<BlePeripheralUart> weakBlePeripheralUart = new WeakReference<>(blePeripheralUart);
@@ -217,6 +251,7 @@ public class HomepageFragment extends Fragment implements UartPacketManagerBase.
     }
 
     public void send() {
+        canSend = false;
         Log.d(TAG, "send: ");
         if (!(mUartData instanceof UartPacketManager)) {
             Log.e(TAG, "Error send with invalid uartData class");
@@ -236,40 +271,53 @@ public class HomepageFragment extends Fragment implements UartPacketManagerBase.
     @Override
     public void onUartPacket(UartPacket packet) {
         byte[] bytes = packet.getData();
-        if(numberOfRecievedBytes != mUartData.getReceivedBytes()){ //if new data
+        if (numberOfRecievedBytes != mUartData.getReceivedBytes()) { //if new data
+            //gets all the text
             text = text + new String(bytes, Charset.forName("UTF-8"));
             String[] temp = text.split(",");
-            if(temp[temp.length-1].equals("-1")){
+            //got to end of all data
+            if (temp[temp.length - 1].equals("-1")) {
                 values.addAll(Arrays.asList(temp));
-                values.remove(values.size()-1);
-                dataPoints = new BottleMeasurement[values.size()];
-                for (int i = 0; i < values.size(); i = i+2){
+                values.remove(values.size() - 1);
+
+                for (int i = 0; i < values.size(); i = i + 2) {
                     long time = timeLastSynced + Integer.parseInt(values.get(i)); //adds millis to millis to get time of measurement
-                    dataPoints[i] = new BottleMeasurement(time, Integer.parseInt(values.get(i+1)), currentBottle);
-                    Log.d(TAG, "onUartPacket: "+Integer.parseInt(values.get(i))+ Integer.parseInt(values.get(i+1)));
+                    dataPoints.add(new BottleMeasurement(time, Integer.parseInt(values.get(i + 1)), currentBottle));
                 }
-                //fillGraph(dataPoints);
+                values.clear();
+                text = "";
+                dataForGraph = new LineGraphSeries<>();
+                for (int i = 0; i < dataPoints.size(); i++) {
+                    long x = dataPoints.get(i).getTimeStamp();
+                    double y;
+                    if(i == 0){
+                        y = dataPoints.get(i).getOz();
+                    } else {
+                        y = (int) (Math.random()*10); //dataPoints.get(i).getOz() - dataPoints.get(i -1).getOz();
+                    }
+                    dataForGraph.appendData(new DataPoint(x, y), true, dataPoints.size());
+                }
+                Paint p = new Paint();
+                p.setStyle(Paint.Style.STROKE);
+                p.setStrokeWidth(5);
+                p.setColor(getResources().getColor(R.color.colorAccent));
+                dataForGraph.setCustomPaint(p);
+                graphView.removeAllSeries();
+                graphView.addSeries(dataForGraph);
+                graphView.onDataChanged(false, false);
+                
+                currentWaterConsumption += dataPoints.get(dataPoints.size() - 1).getOz(); //todo fix to count refills
+
+                calendar = new GregorianCalendar(TimeZone.getDefault());
                 timeLastSynced = calendar.getTime().getTime();
+                sharedPref.edit().putLong(getActivity().getResources().getString(R.string.timeLastSynced), timeLastSynced).apply();
+                lastSyncedMessage = "Last Synced at " + sdf2.format(calendar.getTime());
+                Log.d(TAG, "onUartPacket: "+lastSyncedMessage);
+                textLastSync.setText(lastSyncedMessage);
+                
                 numberOfRecievedBytes = mUartData.getReceivedBytes();
+                canSend = true;
             }
         }
     }
-
-    private void fillGraph(BottleMeasurement[] dataPoints) {
-        for(BottleMeasurement b: dataPoints){
-            int x = (int) b.getDateTime();
-            double y = b.getOz();
-            dataForGraph.appendData(new DataPoint(x, y), true, dataPoints.length);
-        }
-        Paint p = new Paint();
-        p.setStyle(Paint.Style.STROKE);
-        p.setStrokeWidth(5);
-        p.setColor(getResources().getColor(R.color.colorAccent));
-        dataForGraph.setCustomPaint(p);
-        graphView.addSeries(dataForGraph);
-
-        currentWaterConsumption += dataPoints[dataPoints.length-1].getOz(); //todo fix to count refills
-
-    }
-
 }

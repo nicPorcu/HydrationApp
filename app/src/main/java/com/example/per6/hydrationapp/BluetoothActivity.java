@@ -39,10 +39,13 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 
 import com.example.per6.hydrationapp.ble.BleManager;
 import com.example.per6.hydrationapp.ble.BlePeripheral;
+import com.example.per6.hydrationapp.ble.BleScanner;
 import com.example.per6.hydrationapp.ble.BleUtils;
 import com.example.per6.hydrationapp.ble.ScannerViewModel;
 import com.example.per6.hydrationapp.style.StyledSnackBar;
@@ -90,6 +93,13 @@ public class BluetoothActivity extends AppCompatActivity implements ScannerStatu
         context = this;
 
         fm = getSupportFragmentManager();
+
+//        SharedPreferences sharedPref = context.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+//        String peripheralIdentifier = sharedPref.getString(getResources().getString(R.string.peripheralIdentiferSharedPref), "");
+//        if(!peripheralIdentifier.equals("")){
+//            BlePeripheral blePeripheral = BleScanner.getInstance().getPeripheralWithIdentifier(peripheralIdentifier);
+//            blePeripheral.connect(this);
+//        }
         onActivityCreatedStuff();
         onViewCreatedStuff();
 
@@ -484,6 +494,11 @@ public class BluetoothActivity extends AppCompatActivity implements ScannerStatu
 
     public void startPeripheralModules(String peripheralIdentifier) {
         //todo make fragement to which you want app to go
+        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(getString(R.string.peripheralIdentiferSharedPref), peripheralIdentifier);
+        editor.putLong(getString(R.string.timeLastSynced), new GregorianCalendar().getTime().getTime());
+        editor.apply();
         Log.d(TAG, "startPeripheralModules: "+peripheralIdentifier);
         Intent returnIntent = new Intent();
         returnIntent.putExtra("peripheralIdentifier", peripheralIdentifier);

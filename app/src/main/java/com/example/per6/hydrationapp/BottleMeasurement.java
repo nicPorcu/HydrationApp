@@ -37,29 +37,30 @@ public class BottleMeasurement {
     }
 
     public double getOz() {
+        return 3;
         //convert from list of BottleFillDataPoints to array of doubles
-        bottle = new WaterBottle();
-        for(int i = 9; i >=0; i++){
-            BottleFillDataPoint b = new BottleFillDataPoint(i);
-        }
-
-        List<BottleFillDataPoint> bottleDataPoints = bottle.getBottleFillDataPoints();
-        double[] ozValues = new double[bottleDataPoints.size()];
-        for(int i = 0; i < bottleDataPoints.size(); i++){
-            ozValues[i] = bottleDataPoints.get(i).getBottleFillDataPoint();
-        }
-        if(!minSet || !maxSet){
-            //prevents searching extra times
-            //binary search that shit
-            minIndex = ozValues.length-1; //last measurement is lowest bc bottle full means smallest distance
-            maxIndex = 0;
-            binarySearch(ozValues);
-        }
-        double ounces = ozValues.length - maxIndex; //40 oz - 24 oz
-        double decimal =  measurement/ (ozValues[maxIndex] + ozValues[minIndex]); //% between min and max measurement actually is
-        ounces = ounces + decimal;
-
-        return ounces;
+//        bottle = new WaterBottle();
+//        for(int i = 9; i >=0; i++){
+//            BottleFillDataPoint b = new BottleFillDataPoint(i);
+//        }
+//
+//        List<BottleFillDataPoint> bottleDataPoints = bottle.getBottleFillDataPoints();
+//        double[] ozValues = new double[bottleDataPoints.size()];
+//        for(int i = 0; i < bottleDataPoints.size(); i++){
+//            ozValues[i] = bottleDataPoints.get(i).getBottleFillDataPoint();
+//        }
+//        if(!minSet || !maxSet){
+//            //prevents searching extra times
+//            //binary search that shit
+//            minIndex = ozValues.length-1; //last measurement is lowest bc bottle full means smallest distance
+//            maxIndex = 0;
+//            binarySearch(ozValues);
+//        }
+//        double ounces = ozValues.length - maxIndex; //40 oz - 24 oz
+//        double decimal =  measurement/ (ozValues[maxIndex] + ozValues[minIndex]); //% between min and max measurement actually is
+//        ounces = ounces + decimal;
+//
+//        return ounces;
     }
 
     private void binarySearch(double[] ozValues) {
@@ -107,7 +108,7 @@ public class BottleMeasurement {
     }
 
     public String getTime(){
-        SimpleDateFormat sdf = new SimpleDateFormat("h:mm a", Locale.ENGLISH);
+        SimpleDateFormat sdf = new SimpleDateFormat("h:mm a", Locale.US);
         sdf.setTimeZone(TimeZone.getDefault());
         return sdf.format(d);
     }
@@ -117,7 +118,7 @@ public class BottleMeasurement {
     }
 
     public String getDate(){
-        SimpleDateFormat sdf = new SimpleDateFormat("LL dd,yyyy", Locale.ENGLISH);
+        SimpleDateFormat sdf = new SimpleDateFormat("LL dd,yyyy", Locale.US);
         sdf.setTimeZone(TimeZone.getDefault());
         return sdf.format(d);
     }

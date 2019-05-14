@@ -142,6 +142,7 @@
     <string name="peripheraldetails_connecting">Connecting</string>
     <string name="pleaseDisconnect">Disconnect</string>
     <string name="peripheralIdentiferSharedPref">peripheralIdentifier</string>
+    <string name="timeLastSynced">timeLastSynced</string>
 
     <string-array name="notification_frequency_array">
         <item>30 mins</item>

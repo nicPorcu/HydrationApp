@@ -28,6 +28,7 @@ import android.view.MenuItem;
 
 
 import com.example.per6.hydrationapp.ble.BlePeripheral;
+import com.example.per6.hydrationapp.ble.BleScanner;
 import com.example.per6.hydrationapp.ble.ScannerViewModel;
 
 import static android.support.v4.app.NotificationCompat.VISIBILITY_PUBLIC;
@@ -70,8 +71,7 @@ public class MainActivity extends AppCompatActivity
         sharedPref = context.getSharedPreferences(
                 getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         fm = getSupportFragmentManager();
-//        createNotificationChannel();
-//        buildNotification();
+
         if(savedInstanceState == null){
             Intent i = new Intent(this, BluetoothActivity.class);
             startActivityForResult(i, bluetoothActivityRequestCode );
@@ -87,6 +87,28 @@ public class MainActivity extends AppCompatActivity
                 fragmentTransaction.commit();
             }
         }
+//        createNotificationChannel();
+//        buildNotification();
+//        peripheralIdentifier = sharedPref.getString(getResources().getString(R.string.peripheralIdentiferSharedPref), "");
+//        if(peripheralIdentifier.equals("")){
+//            Intent i = new Intent(this, BluetoothActivity.class);
+//            startActivityForResult(i, bluetoothActivityRequestCode );
+//        } else {
+//            BlePeripheral blePeripheral = BleScanner.getInstance().getPeripheralWithIdentifier(peripheralIdentifier);
+//            Log.d(TAG, "onCreate: "+peripheralIdentifier);
+//            if(blePeripheral == null) {
+//                Log.d(TAG, "onCreate: null");
+//                Intent i = new Intent(this, BluetoothActivity.class);
+//                startActivityForResult(i, bluetoothActivityRequestCode );
+//            } else {
+//                blePeripheral.connect(this);
+//                if (blePeripheral.isDisconnected()) {
+//                    Log.d(TAG, "onCreate: diconnected/null");
+//                    Intent i = new Intent(this, BluetoothActivity.class);
+//                    startActivityForResult(i, bluetoothActivityRequestCode);
+//                }
+//            }
+//        }
     }
 
     @Override
