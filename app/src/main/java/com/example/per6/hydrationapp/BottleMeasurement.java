@@ -61,7 +61,7 @@ public class BottleMeasurement {
         //bigger index = smaller measurement
         //min starts at full bottle = last pos.
         //max starts at empty bottle = 0
-        int mid = (int) (minIndex - maxIndex)/2;
+        int mid = (int) (minIndex - maxIndex)/2 + maxIndex;
         if(ozValues[mid] > measurement){ //value at midpoint is larger, ie longer distance ie less water so bring max up to here
             //mid position is at a lower water level than what we lok for, now it is lowest level
             if(ozValues[mid + 1] < measurement){

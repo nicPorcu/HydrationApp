@@ -3,6 +3,7 @@ package com.example.per6.hydrationapp;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothGatt;
 import android.content.Context;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -30,9 +31,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 
 import com.backendless.Backendless;
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
 
 import static com.example.per6.hydrationapp.ConnectedPeripheralFragment.createFragmentArgs;
 
@@ -62,6 +68,8 @@ public class HomepageFragment extends Fragment implements UartPacketManagerBase.
     private WaterBottle currentBottle;
     private GregorianCalendar calendar;
     private long timeLastSynced;
+    private LineGraphSeries<DataPoint> dataForGraph;
+    private GraphView graphView;
 
     public HomepageFragment() {
         // Required empty public constructor
@@ -78,7 +86,6 @@ public class HomepageFragment extends Fragment implements UartPacketManagerBase.
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
     }
 
     @Override
@@ -86,8 +93,9 @@ public class HomepageFragment extends Fragment implements UartPacketManagerBase.
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_homepage, container, false);
-        dailyWaterGoal= (Integer) Backendless.UserService.CurrentUser().getProperty("dailyWaterGoal");
+        dailyWaterGoal = (Integer) Backendless.UserService.CurrentUser().getProperty("dailyWaterGoal");
         currentWaterConsumption = 50;
+        //todo, dont crash app if they press skip
         wireWidgets();
 
         //dogChange(0.0);
@@ -96,6 +104,23 @@ public class HomepageFragment extends Fragment implements UartPacketManagerBase.
     }
 
     private void wireWidgets() {
+        graphView = rootView.findViewById(R.id.graphView);
+        dataForGraph = new LineGraphSeries<DataPoint>();
+
+        for(int i = 0; i < 50; i++){
+            int x = 2*i;
+            int y = x*x;
+            dataForGraph.appendData(new DataPoint(x, y), true, 100);
+        }
+        Paint p = new Paint();
+        p.setStyle(Paint.Style.STROKE);
+        p.setStrokeWidth(5);
+        p.setColor(getResources().getColor(R.color.colorAccent));
+        dataForGraph.setCustomPaint(p);
+        graphView.addSeries(dataForGraph);
+
+        calendar = new GregorianCalendar(TimeZone.getDefault());
+
         context = getActivity();
         imageDog = rootView.findViewById(R.id.imageDog);
         imageDog.setImageDrawable(getResources().getDrawable(R.drawable.happy_dog));
@@ -104,10 +129,10 @@ public class HomepageFragment extends Fragment implements UartPacketManagerBase.
         progressBarWater.setMax(dailyWaterGoal);
         progressBarWater.setProgress(currentWaterConsumption);
         waterBottle = new WaterBottle(); //todo get current bottle
-        timeLastSynced = calendar.getTime().getTime();
-        mBlePeripheral = BleScanner.getInstance().getPeripheralWithIdentifier(singlePeripheralIdentifierMaster);
-
-        setupUart();
+        timeLastSynced = calendar.getTime().getTime(); //todo change to save between states
+//        mBlePeripheral = BleScanner.getInstance().getPeripheralWithIdentifier(singlePeripheralIdentifierMaster);
+//        setupUart();
+        //todo implement pull to refresh check if uart setup then send
 
     }
 
@@ -142,7 +167,6 @@ public class HomepageFragment extends Fragment implements UartPacketManagerBase.
                 if (status == BluetoothGatt.GATT_SUCCESS) {
                     Log.d(TAG, "Uart enabled");
                     uartSetup = true;
-                    send();
                 } else {
                     WeakReference<BlePeripheralUart> weakBlePeripheralUart = new WeakReference<>(blePeripheralUart);
                     Context context1 = context;
@@ -160,8 +184,6 @@ public class HomepageFragment extends Fragment implements UartPacketManagerBase.
                     }
                 }
             }));
-        } else {
-            send();
         }
     }
 
