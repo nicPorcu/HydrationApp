@@ -57,7 +57,7 @@ public class SetupActivity extends AppCompatActivity {
         }
         if(currentFragment instanceof MyInfoFragment){
             Intent i= new Intent(SetupActivity.this, MainActivity.class);
-            startActivity(i);
+            startActivity(i);//
         }
     }
 
